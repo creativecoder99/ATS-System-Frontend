@@ -4,15 +4,19 @@ import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tansta
 import { api, ApiRequestError, BASE_URL, getAccessToken, toQuery } from '../lib/api';
 import { formatDate, formatExperience } from '../lib/format';
 import {
+  ActivityFeedItem,
   EmptyState,
   ErrorState,
   FormError,
   Modal,
   Pager,
+  PipelineStepper,
+  ScorecardRatingBadge,
   SkeletonList,
   StatusBadge,
   Tag,
 } from '../components/ui';
+import { ScorecardModal, type ScorecardSubmission } from '../components/ScorecardModal';
 import {
   APPLICATION_STATUSES,
   type Application,
@@ -48,6 +52,13 @@ export function JobApplicants() {
 
   // Resume Viewer Modal State
   const [previewResumeAppId, setPreviewResumeAppId] = useState<string | null>(null);
+
+  // Greenhouse Scorecard State
+  const [scorecardApp, setScorecardApp] = useState<Application | null>(null);
+  const [scorecards, setScorecards] = useState<Record<string, ScorecardSubmission>>({});
+
+  // Activity Log Drawer State
+  const [expandedActivityAppId, setExpandedActivityAppId] = useState<string | null>(null);
 
   // AI Evaluation Modal State
   const [evalApp, setEvalApp] = useState<Application | null>(null);
@@ -214,6 +225,29 @@ export function JobApplicants() {
         </div>
       </div>
 
+      {/* Greenhouse Pipeline Stage Stepper */}
+      <div className="card p-3">
+        <div className="flex items-center justify-between pb-2 mb-2 border-b border-warm-border text-xs">
+          <span className="font-semibold text-ink">Greenhouse Stage Progression</span>
+          <span className="text-ink-muted">Click stage to filter pipeline</span>
+        </div>
+        <PipelineStepper
+          stages={[
+            { id: '', label: 'All Candidates' },
+            { id: 'applied', label: 'Application Review' },
+            { id: 'shortlisted', label: 'Recruiter Screen' },
+            { id: 'interview', label: 'Technical Interview' },
+            { id: 'offered', label: 'Offer Stage' },
+            { id: 'rejected', label: 'Archived' },
+          ]}
+          activeStageId={statusFilter}
+          onStageSelect={(stageId) => {
+            setStatusFilter(stageId);
+            setPage(1);
+          }}
+        />
+      </div>
+
       {/* Search and Filters Toolbar */}
       <div className="card p-4 space-y-3">
         <form onSubmit={handleSearchSubmit} className="flex flex-col sm:flex-row gap-2">
@@ -344,6 +378,11 @@ export function JobApplicants() {
                       <h2 className="text-base font-semibold text-stone-900">{displayName}</h2>
                       <StatusBadge status={application.status} />
 
+                      {/* Greenhouse Scorecard Badge */}
+                      {scorecards[application._id] && (
+                        <ScorecardRatingBadge rating={scorecards[application._id].overallRating} />
+                      )}
+
                       {/* Search Score or AI Match Score */}
                       {searchResult ? (
                         <span className="chip bg-stone-900 text-white font-semibold text-[11px]">
@@ -393,6 +432,13 @@ export function JobApplicants() {
                     </button>
                     <button
                       type="button"
+                      className="btn-secondary text-xs px-2.5 py-1.5"
+                      onClick={() => setScorecardApp(application)}
+                    >
+                      {scorecards[application._id] ? 'Scorecard ✓' : 'Scorecard'}
+                    </button>
+                    <button
+                      type="button"
                       className="btn-subtle text-xs px-2.5 py-1.5 font-semibold"
                       onClick={() => openEvaluation(application)}
                     >
@@ -418,6 +464,64 @@ export function JobApplicants() {
                     <p className="line-clamp-2">{application.coverLetter}</p>
                   </div>
                 )}
+
+                {/* Greenhouse Activity & Audit Trail Drawer */}
+                <div className="pt-1">
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setExpandedActivityAppId(
+                        expandedActivityAppId === application._id ? null : application._id
+                      )
+                    }
+                    className="text-xs text-brand-900 font-semibold hover:underline inline-flex items-center gap-1"
+                  >
+                    {expandedActivityAppId === application._id
+                      ? '▲ Hide Stage Timeline & Notes'
+                      : '▼ View Stage History & Interview Log'}
+                  </button>
+
+                  {expandedActivityAppId === application._id && (
+                    <div className="mt-3 rounded border border-warm-border bg-warm-subtle p-3.5 space-y-2 animate-slide-down">
+                      <p className="text-xs font-semibold text-ink mb-2">Stage Timeline & Activity Log</p>
+                      <ActivityFeedItem
+                        title="Application Received"
+                        author={blindMode ? 'Candidate' : application.applicant.name}
+                        timestamp={formatDate(application.createdAt)}
+                        type="system"
+                        note="Candidate applied via HireHive job portal."
+                      />
+                      {application.parsedProfile && (
+                        <ActivityFeedItem
+                          title="Resume Extracted"
+                          author="HireHive Parser"
+                          timestamp={formatDate(application.parsedProfile.parsedAt || application.createdAt)}
+                          type="system"
+                          note={`Extracted ${application.parsedProfile.skills.length} skills and ${application.parsedProfile.experienceYears} years experience.`}
+                        />
+                      )}
+                      {scorecards[application._id] && (
+                        <ActivityFeedItem
+                          title={`Scorecard Submitted: ${scorecards[application._id].overallRating.toUpperCase()}`}
+                          author={scorecards[application._id].interviewer}
+                          timestamp={formatDate(scorecards[application._id].submittedAt)}
+                          type="scorecard"
+                          note={scorecards[application._id].keyStrengths || 'Structured evaluation recorded.'}
+                        />
+                      )}
+                      {application.history.map((entry, idx) => (
+                        <ActivityFeedItem
+                          key={idx}
+                          title={`Stage: ${entry.status.toUpperCase()}`}
+                          author="Hiring Team"
+                          timestamp={formatDate(entry.at)}
+                          type="status"
+                          note={entry.note}
+                        />
+                      ))}
+                    </div>
+                  )}
+                </div>
 
                 {/* Pipeline Advancement Footer */}
                 <div className="flex flex-wrap items-center justify-between gap-3 border-t border-stone-100 pt-3 text-xs">
@@ -646,6 +750,25 @@ export function JobApplicants() {
           )}
         </div>
       </Modal>
+
+      {/* Greenhouse Scorecard Modal */}
+      {scorecardApp && (
+        <ScorecardModal
+          isOpen={Boolean(scorecardApp)}
+          onClose={() => setScorecardApp(null)}
+          candidateId={scorecardApp._id}
+          candidateName={
+            blindMode
+              ? scorecardApp.redactedProfile?.anonymizedId ?? 'Candidate'
+              : scorecardApp.applicant.name
+          }
+          jobTitle={job?.title ?? 'Position'}
+          currentStage={scorecardApp.status}
+          onSave={(card) => {
+            setScorecards((prev) => ({ ...prev, [card.candidateId]: card }));
+          }}
+        />
+      )}
     </div>
   );
 }

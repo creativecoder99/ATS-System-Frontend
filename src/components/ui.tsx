@@ -200,3 +200,177 @@ export function Pager({
     </nav>
   );
 }
+
+export type ScoreRating = 'strong-yes' | 'yes' | 'neutral' | 'no' | 'strong-no';
+
+export function ScorecardRatingBadge({ rating }: { rating: ScoreRating }) {
+  switch (rating) {
+    case 'strong-yes':
+      return <span className="score-strong-yes">Strong Yes</span>;
+    case 'yes':
+      return <span className="score-yes">Yes</span>;
+    case 'neutral':
+      return <span className="score-neutral">Neutral</span>;
+    case 'no':
+      return <span className="score-no">No</span>;
+    case 'strong-no':
+      return <span className="score-strong-no">Strong No</span>;
+  }
+}
+
+export interface PipelineStage {
+  id: string;
+  label: string;
+  count?: number;
+}
+
+export function PipelineStepper({
+  stages,
+  activeStageId,
+  onStageSelect,
+}: {
+  stages: PipelineStage[];
+  activeStageId: string;
+  onStageSelect?: (stageId: string) => void;
+}) {
+  const activeIndex = stages.findIndex((s) => s.id === activeStageId);
+
+  return (
+    <div className="w-full overflow-x-auto py-2" role="navigation" aria-label="Pipeline Stages">
+      <div className="flex items-center min-w-[560px] gap-2">
+        {stages.map((stage, idx) => {
+          const isDone = idx < activeIndex;
+          const isActive = idx === activeIndex;
+
+          return (
+            <button
+              key={stage.id}
+              type="button"
+              onClick={() => onStageSelect?.(stage.id)}
+              disabled={!onStageSelect}
+              className={`flex-1 flex items-center justify-between gap-2 px-3 py-2 rounded text-xs transition-all duration-fast ${
+                isActive
+                  ? 'bg-brand-900 text-white font-semibold shadow-sm'
+                  : isDone
+                  ? 'bg-warm-subtle text-ink-800 border border-warm-border hover:bg-warm-highlight'
+                  : 'bg-white text-ink-muted border border-warm-border/80 hover:border-warm-border'
+              }`}
+            >
+              <div className="flex items-center gap-1.5 truncate">
+                <span
+                  className={`flex h-4 w-4 shrink-0 items-center justify-center rounded-full text-[10px] ${
+                    isActive
+                      ? 'bg-white/20 text-white'
+                      : isDone
+                      ? 'bg-emerald-100 text-emerald-800 font-bold'
+                      : 'bg-warm-border text-ink-muted'
+                  }`}
+                >
+                  {isDone ? '✓' : idx + 1}
+                </span>
+                <span className="truncate">{stage.label}</span>
+              </div>
+              {stage.count !== undefined && (
+                <span
+                  className={`rounded-full px-1.5 py-0.2 text-[10px] font-semibold ${
+                    isActive ? 'bg-white/25 text-white' : 'bg-warm-highlight text-ink-700'
+                  }`}
+                >
+                  {stage.count}
+                </span>
+              )}
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+export function KpiTrendCard({
+  title,
+  value,
+  trend,
+  trendLabel,
+  subtitle,
+}: {
+  title: string;
+  value: string | number;
+  trend?: { direction: 'up' | 'down' | 'neutral'; percent: number };
+  trendLabel?: string;
+  subtitle?: string;
+}) {
+  return (
+    <div className="card p-5">
+      <div className="flex items-center justify-between">
+        <p className="text-xs font-semibold uppercase tracking-wider text-ink-muted">{title}</p>
+        {trend && (
+          <span
+            className={`inline-flex items-center gap-0.5 rounded px-1.5 py-0.5 text-xs font-semibold ${
+              trend.direction === 'up'
+                ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                : trend.direction === 'down'
+                ? 'bg-rose-50 text-rose-700 border border-rose-200'
+                : 'bg-stone-100 text-stone-600 border border-stone-200'
+            }`}
+          >
+            {trend.direction === 'up' ? '↑' : trend.direction === 'down' ? '↓' : '•'}{' '}
+            {trend.percent}%
+          </span>
+        )}
+      </div>
+      <p className="mt-2 text-2xl font-bold tracking-tight text-ink">{value}</p>
+      {(trendLabel || subtitle) && (
+        <p className="mt-1 text-xs text-ink-muted">{trendLabel || subtitle}</p>
+      )}
+    </div>
+  );
+}
+
+export function ActivityFeedItem({
+  title,
+  author,
+  timestamp,
+  note,
+  type = 'status',
+}: {
+  title: string;
+  author?: string;
+  timestamp: string;
+  note?: string;
+  type?: 'status' | 'interview' | 'scorecard' | 'system';
+}) {
+  const iconColor =
+    type === 'scorecard'
+      ? 'bg-purple-100 text-purple-800'
+      : type === 'interview'
+      ? 'bg-blue-100 text-blue-800'
+      : type === 'status'
+      ? 'bg-emerald-100 text-emerald-800'
+      : 'bg-stone-100 text-stone-700';
+
+  return (
+    <div className="flex gap-3 text-xs">
+      <div className="flex flex-col items-center">
+        <span
+          className={`flex h-6 w-6 items-center justify-center rounded-full font-bold text-[10px] ${iconColor}`}
+        >
+          {type === 'scorecard' ? '★' : type === 'interview' ? '◷' : '●'}
+        </span>
+        <div className="w-px grow bg-warm-border my-1" />
+      </div>
+      <div className="pb-4 min-w-0 flex-1">
+        <div className="flex items-center justify-between gap-2">
+          <p className="font-semibold text-ink">{title}</p>
+          <span className="text-ink-muted text-[11px] shrink-0">{timestamp}</span>
+        </div>
+        {author && <p className="text-ink-muted mt-0.5">By {author}</p>}
+        {note && (
+          <div className="mt-1.5 rounded border border-warm-border bg-warm-subtle p-2 text-ink-800 italic">
+            "{note}"
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}

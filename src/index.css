@@ -79,15 +79,47 @@
 
   /* Structural cards */
   .card {
-    @apply rounded-lg border border-stone-200/90 bg-white shadow-[0_1px_2px_rgba(0,0,0,0.03)];
+    @apply rounded-lg border border-warm-border bg-white shadow-[0_1px_3px_rgba(0,0,0,0.03)] transition-all duration-fast;
+  }
+
+  .card-interactive {
+    @apply card hover:-translate-y-0.5 hover:shadow-md hover:border-stone-300;
   }
 
   .card-flat {
-    @apply rounded-lg border border-stone-200 bg-white;
+    @apply rounded-lg border border-warm-border bg-white;
   }
 
   .chip {
-    @apply inline-flex items-center rounded px-2 py-0.5 text-xs font-medium border;
+    @apply inline-flex items-center rounded px-2.5 py-0.5 text-xs font-medium border border-warm-border bg-warm-subtle text-ink-700;
+  }
+
+  /* Scorecard & Rating Tokens (Greenhouse Signature) */
+  .score-strong-yes {
+    @apply inline-flex items-center gap-1 rounded px-2 py-0.5 text-xs font-semibold bg-emerald-100 text-emerald-800 border border-emerald-300;
+  }
+  .score-yes {
+    @apply inline-flex items-center gap-1 rounded px-2 py-0.5 text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200;
+  }
+  .score-neutral {
+    @apply inline-flex items-center gap-1 rounded px-2 py-0.5 text-xs font-semibold bg-stone-100 text-stone-700 border border-stone-200;
+  }
+  .score-no {
+    @apply inline-flex items-center gap-1 rounded px-2 py-0.5 text-xs font-semibold bg-amber-50 text-amber-800 border border-amber-200;
+  }
+  .score-strong-no {
+    @apply inline-flex items-center gap-1 rounded px-2 py-0.5 text-xs font-semibold bg-rose-100 text-rose-800 border border-rose-300;
+  }
+
+  /* Pipeline Progression Steps */
+  .pipeline-step-active {
+    @apply relative flex items-center justify-center font-semibold text-xs py-1.5 px-3 rounded bg-brand-900 text-white shadow-sm transition-all duration-fast;
+  }
+  .pipeline-step-done {
+    @apply relative flex items-center justify-center font-medium text-xs py-1.5 px-3 rounded bg-stone-100 text-stone-700 border border-stone-200 hover:bg-stone-200 transition-all duration-fast;
+  }
+  .pipeline-step-upcoming {
+    @apply relative flex items-center justify-center font-medium text-xs py-1.5 px-3 rounded bg-warm-bg text-ink-muted border border-dashed border-stone-300;
   }
 
   /* Skeleton Loaders */

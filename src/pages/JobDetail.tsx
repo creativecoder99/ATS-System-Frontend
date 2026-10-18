@@ -122,24 +122,24 @@ export function JobDetail() {
         </div>
 
         {/* Apply Action Bar */}
-        <div className="flex flex-wrap items-center gap-3 border-t border-stone-100 pt-6">
+        <div className="flex flex-wrap items-center gap-3 border-t border-warm-border pt-6">
           {!user && (
             <div className="flex items-center gap-3">
               <button
                 type="button"
-                className="btn-accent text-xs"
+                className="btn-primary text-xs"
                 onClick={() => navigate('/login', { state: { from: `/jobs/${id}` } })}
               >
                 Log in to submit application
               </button>
-              <span className="text-xs text-stone-500">Sign in as a candidate to apply.</span>
+              <span className="text-xs text-ink-muted">Sign in as a candidate to apply.</span>
             </div>
           )}
 
           {job.hasApplied && (
             <div className="flex items-center gap-3 text-xs">
-              <span className="chip bg-stone-900 text-white font-semibold">Applied</span>
-              <Link to="/applications" className="font-semibold text-[#0f2942] hover:underline">
+              <span className="chip bg-brand-900 text-white font-semibold">Applied</span>
+              <Link to="/applications" className="font-semibold text-brand-900 hover:underline">
                 View status in your applications list
               </Link>
             </div>
@@ -148,7 +148,7 @@ export function JobDetail() {
           {canApply && (
             <button
               type="button"
-              className="btn-accent text-xs px-5 py-2"
+              className="btn-primary text-xs px-5 py-2"
               onClick={() => setShowApply(true)}
             >
               Apply for this position
@@ -165,6 +165,52 @@ export function JobDetail() {
               {job.isSaved ? 'Remove bookmark' : 'Bookmark role'}
             </button>
           )}
+        </div>
+      </div>
+
+      {/* Greenhouse Structured Hiring Process Roadmap */}
+      <div className="card p-6 space-y-4">
+        <div>
+          <span className="chip bg-warm-subtle text-ink font-semibold text-[11px]">
+            Greenhouse Candidate Experience
+          </span>
+          <h2 className="text-base font-bold text-ink mt-1.5">
+            What to expect in our interview process
+          </h2>
+          <p className="text-xs text-ink-muted mt-0.5">
+            We follow a structured evaluation rubric so every candidate receives a fair, predictable, and transparent review.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-4 gap-3 pt-1">
+          <div className="rounded border border-warm-border bg-warm-subtle p-3 space-y-1">
+            <span className="text-[10px] font-bold text-brand-900 uppercase">Step 01</span>
+            <p className="text-xs font-semibold text-ink">Resume Triage</p>
+            <p className="text-[11px] text-ink-muted">Blind screening to remove bias. Async parsing within 24h.</p>
+          </div>
+
+          <div className="rounded border border-warm-border bg-warm-subtle p-3 space-y-1">
+            <span className="text-[10px] font-bold text-brand-900 uppercase">Step 02</span>
+            <p className="text-xs font-semibold text-ink">Recruiter Connect</p>
+            <p className="text-[11px] text-ink-muted">30 min call covering experience, compensation, and career fit.</p>
+          </div>
+
+          <div className="rounded border border-warm-border bg-warm-subtle p-3 space-y-1">
+            <span className="text-[10px] font-bold text-brand-900 uppercase">Step 03</span>
+            <p className="text-xs font-semibold text-ink">Scorecard Kit</p>
+            <p className="text-[11px] text-ink-muted">45 min technical session evaluating architecture and problem solving.</p>
+          </div>
+
+          <div className="rounded border border-warm-border bg-warm-subtle p-3 space-y-1">
+            <span className="text-[10px] font-bold text-brand-900 uppercase">Step 04</span>
+            <p className="text-xs font-semibold text-ink">Offer & Next Steps</p>
+            <p className="text-[11px] text-ink-muted">Written decision, transparent compensation breakdown, and onboarding.</p>
+          </div>
+        </div>
+
+        <div className="pt-2 border-t border-warm-border flex flex-wrap items-center justify-between text-[11px] text-ink-muted">
+          <span>✓ Equal Opportunity Employer</span>
+          <span>✓ Real-time status notifications on candidate dashboard</span>
         </div>
       </div>
 
