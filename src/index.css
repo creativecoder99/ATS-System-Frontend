@@ -79,7 +79,7 @@
 
   /* Structural cards */
   .card {
-    @apply rounded-lg border border-warm-border bg-white shadow-[0_1px_3px_rgba(0,0,0,0.03)] transition-all duration-fast;
+    @apply rounded-lg border border-warm-border bg-white shadow-[0_1px_3px_rgba(0,0,0,0.03)] transition-all duration-200;
   }
 
   .card-interactive {
@@ -113,10 +113,10 @@
 
   /* Pipeline Progression Steps */
   .pipeline-step-active {
-    @apply relative flex items-center justify-center font-semibold text-xs py-1.5 px-3 rounded bg-brand-900 text-white shadow-sm transition-all duration-fast;
+    @apply relative flex items-center justify-center font-semibold text-xs py-1.5 px-3 rounded bg-brand-900 text-white shadow-sm transition-all duration-200;
   }
   .pipeline-step-done {
-    @apply relative flex items-center justify-center font-medium text-xs py-1.5 px-3 rounded bg-stone-100 text-stone-700 border border-stone-200 hover:bg-stone-200 transition-all duration-fast;
+    @apply relative flex items-center justify-center font-medium text-xs py-1.5 px-3 rounded bg-stone-100 text-stone-700 border border-stone-200 hover:bg-stone-200 transition-all duration-200;
   }
   .pipeline-step-upcoming {
     @apply relative flex items-center justify-center font-medium text-xs py-1.5 px-3 rounded bg-warm-bg text-ink-muted border border-dashed border-stone-300;
