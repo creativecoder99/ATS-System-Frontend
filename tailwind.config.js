@@ -80,6 +80,10 @@ export default {
           '0%': { transform: 'translateX(0%)' },
           '100%': { transform: 'translateX(-50%)' },
         },
+        'marquee-reverse': {
+          '0%': { transform: 'translateX(-50%)' },
+          '100%': { transform: 'translateX(0%)' },
+        },
       },
       animation: {
         'fade-in': 'fadeIn 200ms cubic-bezier(0.16, 1, 0.3, 1) forwards',
@@ -87,8 +91,10 @@ export default {
         'slide-down': 'slideDown 200ms cubic-bezier(0.16, 1, 0.3, 1) forwards',
         'scale-in': 'scaleIn 200ms cubic-bezier(0.16, 1, 0.3, 1) forwards',
         'pulse-glow': 'pulseGlow 2s ease-in-out infinite',
-        marquee: 'marquee 30s linear infinite',
+        marquee: 'marquee var(--marquee-duration, 35s) linear infinite',
+        'marquee-reverse': 'marquee-reverse var(--marquee-duration, 35s) linear infinite',
       },
+
     },
   },
   plugins: [],

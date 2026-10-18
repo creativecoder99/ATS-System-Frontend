@@ -46,6 +46,17 @@ export interface Job {
   isSaved?: boolean;
 }
 
+export interface HiringCompany {
+  name: string;
+  openJobs: number;
+  locations: string[];
+  skills: string[];
+  types?: JobType[];
+  workModes?: WorkMode[];
+  latestJobDate?: string;
+}
+
+
 export interface ParsedProfile {
   skills: string[];
   experienceYears: number;
