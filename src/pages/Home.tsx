@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { api } from '../lib/api';
 import { JobCard } from '../components/JobCard';
+import { CompanySlider } from '../components/CompanySlider';
 import {
   ScorecardRatingBadge,
   SkeletonList,
@@ -260,8 +261,11 @@ export function Home() {
         </div>
       </section>
 
+      {/* Associated Companies Infinite Logo Slider */}
+      <CompanySlider />
+
       {/* Greenhouse Structured Hiring Pillars */}
-      <section className="mx-auto max-w-6xl px-4 sm:px-6 border-t border-warm-border pt-12">
+      <section className="mx-auto max-w-6xl px-4 sm:px-6 pt-4">
         <div className="max-w-2xl mb-10">
           <div className="text-xs font-semibold uppercase tracking-wider text-ink-muted">
             The Greenhouse Standard

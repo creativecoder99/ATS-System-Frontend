@@ -65,11 +65,12 @@ export function Navbar() {
     <header className="sticky top-0 z-30 border-b border-stone-200/90 bg-[#f8f7f4]/95 backdrop-blur-sm">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-4 sm:px-6">
         {/* Brand */}
-        <Link to="/" className="flex items-center gap-2.5 text-lg font-semibold tracking-tight text-stone-900">
-          <span className="grid h-8 w-8 place-items-center rounded bg-[#0f2942] text-xs font-bold text-white">
-            HH
-          </span>
-          <span>HireHive</span>
+        <Link to="/" className="flex items-center gap-2 group">
+          <img
+            src="/logo/hirehive-logo.png"
+            alt="HireHive ATS"
+            className="h-8 sm:h-9 w-auto object-contain rounded transition-transform duration-200 group-hover:scale-105"
+          />
         </Link>
 
         {/* Navigation links */}

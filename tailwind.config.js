@@ -76,6 +76,10 @@ export default {
           '0%, 100%': { opacity: '1' },
           '50%': { opacity: '0.6' },
         },
+        marquee: {
+          '0%': { transform: 'translateX(0%)' },
+          '100%': { transform: 'translateX(-50%)' },
+        },
       },
       animation: {
         'fade-in': 'fadeIn 200ms cubic-bezier(0.16, 1, 0.3, 1) forwards',
@@ -83,6 +87,7 @@ export default {
         'slide-down': 'slideDown 200ms cubic-bezier(0.16, 1, 0.3, 1) forwards',
         'scale-in': 'scaleIn 200ms cubic-bezier(0.16, 1, 0.3, 1) forwards',
         'pulse-glow': 'pulseGlow 2s ease-in-out infinite',
+        marquee: 'marquee 30s linear infinite',
       },
     },
   },

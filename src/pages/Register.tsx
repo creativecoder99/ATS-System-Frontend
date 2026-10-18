@@ -52,11 +52,14 @@ export function Register() {
   return (
     <div className="mx-auto max-w-md px-4 py-12">
       <div className="card p-8">
-        <div className="flex items-center gap-2 mb-2">
-          <span className="flex h-7 w-7 items-center justify-center rounded bg-brand-900 text-xs font-bold text-white tracking-wider">
-            HH
-          </span>
-          <span className="text-sm font-semibold tracking-tight text-ink">HireHive</span>
+        <div className="mb-4">
+          <Link to="/">
+            <img
+              src="/logo/hirehive-logo.png"
+              alt="HireHive"
+              className="h-9 w-auto object-contain rounded"
+            />
+          </Link>
         </div>
         <h1 className="text-2xl font-bold tracking-tight text-ink">Create your account</h1>
         <p className="mt-1 text-sm text-ink-muted">Set up your workspace as a candidate or recruiter.</p>

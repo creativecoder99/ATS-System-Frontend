@@ -1,5 +1,6 @@
 import { Link, Route, Routes } from 'react-router-dom';
 import { Navbar } from './components/Navbar';
+import { Footer } from './components/Footer';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { Home } from './pages/Home';
 import { Jobs } from './pages/Jobs';
@@ -58,28 +59,7 @@ export default function App() {
         </Routes>
       </main>
 
-      <footer className="border-t border-stone-200/90 bg-[#f8f7f4] py-8">
-        <div className="mx-auto max-w-6xl px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-stone-500">
-          <div className="flex items-center gap-2 font-medium text-stone-700">
-            <span className="grid h-5 w-5 place-items-center rounded bg-[#0f2942] text-[10px] font-bold text-white">
-              HH
-            </span>
-            <span>HireHive Applicant Tracking System</span>
-          </div>
-
-          <div className="flex items-center gap-5">
-            <Link to="/jobs" className="hover:text-stone-900 transition-colors">
-              Jobs
-            </Link>
-            <Link to="/terms" className="hover:text-stone-900 transition-colors">
-              Terms of Service
-            </Link>
-            <Link to="/privacy" className="hover:text-stone-900 transition-colors">
-              Privacy Policy
-            </Link>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }
