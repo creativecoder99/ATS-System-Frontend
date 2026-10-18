@@ -61,12 +61,14 @@ export function Profile() {
 
   return (
     <div className="mx-auto max-w-2xl px-4 py-8">
-      <h1 className="text-2xl font-bold text-slate-900">Your profile</h1>
-      <p className="mt-1 text-sm text-slate-500">
-        Signed in as {user.email} · <span className="capitalize">{user.role}</span>
-      </p>
+      <div className="border-b border-warm-border pb-4">
+        <h1 className="text-2xl font-bold tracking-tight text-ink">Account profile</h1>
+        <p className="mt-1 text-sm text-ink-muted">
+          Signed in as {user.email} · <span className="capitalize font-medium text-ink">{user.role}</span>
+        </p>
+      </div>
 
-      <form onSubmit={handleSubmit} className="card mt-6 space-y-4 p-6">
+      <form onSubmit={handleSubmit} className="card mt-6 space-y-5 p-6">
         <FormError message={error} />
 
         <div>
@@ -85,12 +87,12 @@ export function Profile() {
 
         <div>
           <label htmlFor="headline" className="label">
-            Headline
+            Professional headline
           </label>
           <input
             id="headline"
             className="input"
-            placeholder="Final-year CSE student · MERN developer"
+            placeholder="Final-year CSE student / Full Stack Developer"
             value={form.headline}
             onChange={(e) => update({ headline: e.target.value })}
             maxLength={140}
@@ -106,7 +108,7 @@ export function Profile() {
             <input
               id="location"
               className="input"
-              placeholder="Visakhapatnam"
+              placeholder="Bangalore, India"
               value={form.location}
               onChange={(e) => update({ location: e.target.value })}
             />
@@ -132,7 +134,7 @@ export function Profile() {
         {user.role === 'recruiter' && (
           <div>
             <label htmlFor="company" className="label">
-              Company
+              Company name
             </label>
             <input
               id="company"
@@ -145,24 +147,28 @@ export function Profile() {
 
         <div>
           <label htmlFor="skills" className="label">
-            Skills
+            Key skills
           </label>
           <input
             id="skills"
             className="input"
-            placeholder="React, Node.js, MongoDB"
+            placeholder="React, TypeScript, Node.js, MongoDB"
             value={form.skills}
             onChange={(e) => update({ skills: e.target.value })}
           />
-          <p className="mt-1 text-xs text-slate-400">Separate skills with commas.</p>
+          <p className="mt-1 text-xs text-ink-muted">Separate skills with commas.</p>
           <FieldError message={fieldErrors.skills} />
         </div>
 
-        <div className="flex items-center gap-3 pt-2">
+        <div className="flex items-center gap-3 pt-3 border-t border-warm-border">
           <button type="submit" className="btn-primary" disabled={status === 'saving'}>
-            {status === 'saving' ? 'Saving…' : 'Save changes'}
+            {status === 'saving' ? 'Saving...' : 'Save changes'}
           </button>
-          {status === 'saved' && <span className="text-sm text-emerald-600">Saved ✓</span>}
+          {status === 'saved' && (
+            <span className="text-xs font-semibold text-emerald-800 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded">
+              Changes saved
+            </span>
+          )}
         </div>
       </form>
     </div>

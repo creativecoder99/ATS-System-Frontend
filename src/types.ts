@@ -46,6 +46,33 @@ export interface Job {
   isSaved?: boolean;
 }
 
+export interface ParsedProfile {
+  skills: string[];
+  experienceYears: number;
+  education: string[];
+  summary: string;
+  rawTextSnippet?: string;
+  parsedAt?: string;
+}
+
+export interface RedactedProfile {
+  anonymizedId: string;
+  skills: string[];
+  experienceYears: number;
+  educationDegrees: string[];
+  summary: string;
+}
+
+export interface AiReview {
+  matchScore: number;
+  rating: 'Strong Match' | 'Moderate Match' | 'Potential Match' | 'Low Fit';
+  strengths: string[];
+  gaps: string[];
+  interviewQuestions: string[];
+  summary: string;
+  analyzedAt?: string;
+}
+
 export interface Application {
   _id: string;
   job: Job;
@@ -54,7 +81,40 @@ export interface Application {
   coverLetter?: string;
   resumeUrl: string;
   history: { status: ApplicationStatus; at: string; note?: string }[];
+  parsedProfile?: ParsedProfile;
+  redactedProfile?: RedactedProfile;
+  aiReview?: AiReview;
   createdAt: string;
+}
+
+export interface AppNotification {
+  _id: string;
+  recipient: string;
+  type: 'status_update' | 'application_received' | 'job_alert' | 'system';
+  title: string;
+  message: string;
+  link?: string;
+  read: boolean;
+  createdAt: string;
+}
+
+export interface SearchApplicantResult {
+  application: Application;
+  score: number;
+  matchedSkills: string[];
+  matchSummary: string;
+}
+
+export interface CopilotResponse {
+  answer: string;
+  suggestedAction?: 'shortlist' | 'interview' | 'review';
+  topCandidates?: {
+    candidateId: string;
+    name: string;
+    score: number;
+    skills: string[];
+    summary: string;
+  }[];
 }
 
 export interface Pagination {

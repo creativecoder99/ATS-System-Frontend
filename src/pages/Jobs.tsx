@@ -4,15 +4,13 @@ import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { api, toQuery } from '../lib/api';
 import { useDebounce } from '../hooks/useDebounce';
 import { JobCard } from '../components/JobCard';
-import { EmptyState, ErrorState, Pager, Spinner } from '../components/ui';
+import { EmptyState, ErrorState, Pager, SkeletonList } from '../components/ui';
 import type { Job, JobType, Paginated, WorkMode } from '../types';
 
 const JOB_TYPES: JobType[] = ['full-time', 'part-time', 'internship', 'contract'];
 const WORK_MODES: WorkMode[] = ['on-site', 'remote', 'hybrid'];
 
 export function Jobs() {
-  // The URL is the source of truth for filters, so a filtered search is
-  // shareable and survives a refresh or the browser back button.
   const [searchParams, setSearchParams] = useSearchParams();
 
   const [searchInput, setSearchInput] = useState(searchParams.get('q') ?? '');
@@ -25,8 +23,6 @@ export function Jobs() {
   const minSalary = searchParams.get('minSalary') ?? '';
   const sort = searchParams.get('sort') ?? 'newest';
 
-  // Push the debounced text into the URL, resetting to page 1 — staying on
-  // page 4 of the previous result set would usually show nothing.
   useEffect(() => {
     const current = searchParams.get('q') ?? '';
     if (debouncedSearch === current) return;
@@ -65,41 +61,47 @@ export function Jobs() {
   const { data, isLoading, isError, error, refetch, isFetching } = useQuery({
     queryKey: ['jobs', queryString],
     queryFn: () => api.get<Paginated<Job>>(`/jobs${queryString}`),
-    // Keeps the previous page rendered while the next one loads, so the list
-    // does not collapse to a spinner on every filter change.
     placeholderData: keepPreviousData,
   });
 
   const hasFilters = Array.from(searchParams.keys()).some((k) => k !== 'page');
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-8">
-      <h1 className="text-2xl font-bold text-slate-900">Browse jobs</h1>
+    <div className="mx-auto max-w-6xl px-4 sm:px-6 py-8 space-y-6">
+      <div className="pb-4 border-b border-stone-200">
+        <h1 className="text-2xl font-semibold tracking-tight text-stone-900">
+          Available Positions
+        </h1>
+        <p className="mt-1 text-xs text-stone-600">
+          Search roles by technology, work mode, or geographic preference.
+        </p>
+      </div>
 
-      <div className="mt-6 grid gap-6 lg:grid-cols-[260px_1fr]">
-        <aside className="card h-fit p-5">
+      <div className="grid gap-6 lg:grid-cols-[260px_1fr] items-start">
+        {/* Filters Sidebar */}
+        <aside className="card p-5 space-y-4 border-stone-200">
           <div className="flex items-center justify-between">
-            <h2 className="text-sm font-semibold text-slate-900">Filters</h2>
+            <h2 className="text-xs font-semibold uppercase tracking-wider text-stone-900">Filters</h2>
             {hasFilters && (
               <button
                 type="button"
                 onClick={clearFilters}
-                className="text-xs font-medium text-brand-700 hover:underline"
+                className="text-xs font-medium text-[#0f2942] hover:underline"
               >
-                Clear all
+                Reset
               </button>
             )}
           </div>
 
-          <div className="mt-4 space-y-4">
+          <div className="space-y-4 pt-1">
             <div>
               <label htmlFor="search" className="label">
                 Keyword
               </label>
               <input
                 id="search"
-                className="input"
-                placeholder="React, backend…"
+                className="input text-xs"
+                placeholder="React, TypeScript, Go..."
                 value={searchInput}
                 onChange={(e) => setSearchInput(e.target.value)}
               />
@@ -111,8 +113,8 @@ export function Jobs() {
               </label>
               <input
                 id="location"
-                className="input"
-                placeholder="Bangalore"
+                className="input text-xs"
+                placeholder="Bangalore, Remote..."
                 value={location}
                 onChange={(e) => setFilter('location', e.target.value)}
               />
@@ -120,15 +122,15 @@ export function Jobs() {
 
             <div>
               <label htmlFor="type" className="label">
-                Job type
+                Job Type
               </label>
               <select
                 id="type"
-                className="input"
+                className="input text-xs"
                 value={type}
                 onChange={(e) => setFilter('type', e.target.value)}
               >
-                <option value="">Any</option>
+                <option value="">Any type</option>
                 {JOB_TYPES.map((t) => (
                   <option key={t} value={t}>
                     {t}
@@ -139,15 +141,15 @@ export function Jobs() {
 
             <div>
               <label htmlFor="workMode" className="label">
-                Work mode
+                Work Mode
               </label>
               <select
                 id="workMode"
-                className="input"
+                className="input text-xs"
                 value={workMode}
                 onChange={(e) => setFilter('workMode', e.target.value)}
               >
-                <option value="">Any</option>
+                <option value="">Any mode</option>
                 {WORK_MODES.map((m) => (
                   <option key={m} value={m}>
                     {m}
@@ -158,81 +160,81 @@ export function Jobs() {
 
             <div>
               <label htmlFor="minSalary" className="label">
-                Minimum salary
+                Minimum Annual CTC
               </label>
               <select
                 id="minSalary"
-                className="input"
+                className="input text-xs"
                 value={minSalary}
                 onChange={(e) => setFilter('minSalary', e.target.value)}
               >
-                <option value="">Any</option>
+                <option value="">Any salary</option>
                 <option value="300000">₹3L+</option>
                 <option value="600000">₹6L+</option>
                 <option value="1000000">₹10L+</option>
-                <option value="2000000">₹20L+</option>
+                <option value="1500000">₹15L+</option>
+                <option value="2500000">₹25L+</option>
               </select>
             </div>
           </div>
         </aside>
 
+        {/* Results List */}
         <div>
-          <div className="mb-4 flex items-center justify-between gap-4">
-            <p className="text-sm text-slate-600">
-              {data ? (
-                <>
-                  <span className="font-medium text-slate-900">{data.pagination.total}</span> job
-                  {data.pagination.total === 1 ? '' : 's'} found
-                  {isFetching && <span className="ml-2 text-slate-400">updating…</span>}
-                </>
-              ) : (
-                'Searching…'
-              )}
-            </p>
+          <div className="flex items-center justify-between pb-3 text-xs text-stone-500">
+            <span>
+              {data ? `${data.pagination.total} position(s) found` : 'Loading...'}
+              {isFetching && !isLoading && ' (updating...)'}
+            </span>
 
-            <select
-              className="input w-auto"
-              value={sort}
-              onChange={(e) => setFilter('sort', e.target.value)}
-              aria-label="Sort jobs"
-            >
-              <option value="newest">Newest first</option>
-              <option value="oldest">Oldest first</option>
-              <option value="salary">Highest salary</option>
-              <option value="relevance">Most relevant</option>
-            </select>
+            <div className="flex items-center gap-2">
+              <label htmlFor="sort" className="font-medium text-stone-700">
+                Sort:
+              </label>
+              <select
+                id="sort"
+                className="rounded border border-stone-300 bg-white px-2 py-1 text-xs text-stone-900"
+                value={sort}
+                onChange={(e) => setFilter('sort', e.target.value)}
+              >
+                <option value="newest">Newest first</option>
+                <option value="salary">Highest salary</option>
+                <option value="relevance">Keyword relevance</option>
+              </select>
+            </div>
           </div>
 
           {isLoading ? (
-            <Spinner label="Loading jobs" />
+            <SkeletonList count={4} />
           ) : isError ? (
             <ErrorState
-              message={error instanceof Error ? error.message : 'Could not load jobs'}
+              message={error instanceof Error ? error.message : 'Could not load job postings.'}
               onRetry={refetch}
             />
-          ) : data && data.data.length === 0 ? (
+          ) : data?.data.length === 0 ? (
             <EmptyState
-              title="No jobs match those filters"
-              description="Try removing a filter or searching for a broader term."
+              title="No positions match your criteria"
+              description="Try adjusting your keyword, location, or salary filters to see more results."
               action={
-                hasFilters && (
-                  <button type="button" className="btn-secondary" onClick={clearFilters}>
-                    Clear filters
+                hasFilters ? (
+                  <button type="button" onClick={clearFilters} className="btn-secondary text-xs">
+                    Clear all filters
                   </button>
-                )
+                ) : undefined
               }
             />
           ) : (
-            <>
-              <div className="space-y-4">
-                {data?.data.map((job) => <JobCard key={job._id} job={job} />)}
-              </div>
+            <div className="space-y-4">
+              {data?.data.map((job) => (
+                <JobCard key={job._id} job={job} />
+              ))}
+
               <Pager
                 page={page}
                 totalPages={data?.pagination.totalPages ?? 1}
                 onChange={(p) => setFilter('page', String(p))}
               />
-            </>
+            </div>
           )}
         </div>
       </div>

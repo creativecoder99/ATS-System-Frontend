@@ -113,21 +113,26 @@ export function JobForm() {
 
   return (
     <div className="mx-auto max-w-2xl px-4 py-8">
-      <h1 className="text-2xl font-bold text-slate-900">
-        {isEdit ? 'Edit job posting' : 'Post a new job'}
-      </h1>
+      <div className="border-b border-warm-border pb-4">
+        <h1 className="text-2xl font-bold tracking-tight text-ink">
+          {isEdit ? 'Edit job posting' : 'Create new job posting'}
+        </h1>
+        <p className="mt-1 text-sm text-ink-muted">
+          Define role requirements, compensation, and qualifications for candidates.
+        </p>
+      </div>
 
       <form onSubmit={handleSubmit} className="card mt-6 space-y-4 p-6">
         <FormError message={error} />
 
         <div>
           <label htmlFor="title" className="label">
-            Job title <span className="text-red-500">*</span>
+            Job title <span className="text-red-600">*</span>
           </label>
           <input
             id="title"
             className="input"
-            placeholder="Full Stack Developer (MERN)"
+            placeholder="Senior Full Stack Engineer"
             value={form.title}
             onChange={(e) => update({ title: e.target.value })}
             required
@@ -137,7 +142,7 @@ export function JobForm() {
 
         <div>
           <label htmlFor="company" className="label">
-            Company <span className="text-red-500">*</span>
+            Hiring company <span className="text-red-600">*</span>
           </label>
           <input
             id="company"
@@ -151,20 +156,20 @@ export function JobForm() {
 
         <div>
           <label htmlFor="description" className="label">
-            Description <span className="text-red-500">*</span>
+            Role description & requirements <span className="text-red-600">*</span>
           </label>
           <textarea
             id="description"
             className="input min-h-[160px] resize-y"
-            placeholder="What will this person work on? What are you looking for?"
+            placeholder="Describe the mission, technical stack, day-to-day responsibilities, and expected impact."
             value={form.description}
             onChange={(e) => update({ description: e.target.value })}
             required
             minLength={30}
             maxLength={8000}
           />
-          <p className="mt-1 text-right text-xs text-slate-400">
-            {form.description.length}/8000 · minimum 30
+          <p className="mt-1 text-right text-xs text-ink-muted">
+            {form.description.length}/8000 · minimum 30 characters
           </p>
           <FieldError message={fieldErrors.description} />
         </div>
@@ -172,12 +177,12 @@ export function JobForm() {
         <div className="grid gap-4 sm:grid-cols-3">
           <div>
             <label htmlFor="location" className="label">
-              Location <span className="text-red-500">*</span>
+              Location <span className="text-red-600">*</span>
             </label>
             <input
               id="location"
               className="input"
-              placeholder="Bangalore"
+              placeholder="Bangalore, India"
               value={form.location}
               onChange={(e) => update({ location: e.target.value })}
               required
@@ -191,7 +196,7 @@ export function JobForm() {
             </label>
             <select
               id="workMode"
-              className="input"
+              className="input capitalize"
               value={form.workMode}
               onChange={(e) => update({ workMode: e.target.value as WorkMode })}
             >
@@ -205,11 +210,11 @@ export function JobForm() {
 
           <div>
             <label htmlFor="type" className="label">
-              Job type
+              Employment type
             </label>
             <select
               id="type"
-              className="input"
+              className="input capitalize"
               value={form.type}
               onChange={(e) => update({ type: e.target.value as JobType })}
             >
@@ -225,7 +230,7 @@ export function JobForm() {
         <div className="grid gap-4 sm:grid-cols-2">
           <div>
             <label htmlFor="salaryMin" className="label">
-              Salary minimum (₹ per year)
+              Minimum compensation (₹ / year)
             </label>
             <input
               id="salaryMin"
@@ -242,7 +247,7 @@ export function JobForm() {
 
           <div>
             <label htmlFor="salaryMax" className="label">
-              Salary maximum (₹ per year)
+              Maximum compensation (₹ / year)
             </label>
             <input
               id="salaryMax"
@@ -250,7 +255,7 @@ export function JobForm() {
               min={0}
               step={10000}
               className="input"
-              placeholder="1400000"
+              placeholder="1500000"
               value={form.salaryMax}
               onChange={(e) => update({ salaryMax: e.target.value })}
             />
@@ -276,7 +281,7 @@ export function JobForm() {
 
           <div>
             <label htmlFor="openings" className="label">
-              Number of openings
+              Available openings
             </label>
             <input
               id="openings"
@@ -291,19 +296,19 @@ export function JobForm() {
 
         <div>
           <label htmlFor="skills" className="label">
-            Required skills
+            Required skills (used for resume matching & semantic search)
           </label>
           <input
             id="skills"
             className="input"
-            placeholder="React, Node.js, MongoDB"
+            placeholder="React, TypeScript, Node.js, MongoDB"
             value={form.skills}
             onChange={(e) => update({ skills: e.target.value })}
           />
-          <p className="mt-1 text-xs text-slate-400">Separate skills with commas.</p>
+          <p className="mt-1 text-xs text-ink-muted">Separate skills with commas.</p>
         </div>
 
-        <div className="flex justify-end gap-2 pt-2">
+        <div className="flex justify-end gap-2 pt-3 border-t border-warm-border">
           <button
             type="button"
             className="btn-secondary"
@@ -312,7 +317,7 @@ export function JobForm() {
             Cancel
           </button>
           <button type="submit" className="btn-primary" disabled={save.isPending}>
-            {save.isPending ? 'Saving…' : isEdit ? 'Save changes' : 'Post job'}
+            {save.isPending ? 'Saving...' : isEdit ? 'Save changes' : 'Publish job'}
           </button>
         </div>
       </form>

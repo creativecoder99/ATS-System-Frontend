@@ -4,18 +4,36 @@ export default {
   theme: {
     extend: {
       colors: {
-        brand: {
-          50: '#eef4ff',
-          100: '#d9e5ff',
-          200: '#bcd1ff',
-          300: '#8eb3ff',
-          400: '#5989ff',
-          500: '#3563ff',
-          600: '#1f40f5',
-          700: '#182fe1',
-          800: '#1a29b6',
-          900: '#1c2a8f',
+        warm: {
+          bg: '#f8f7f4',
+          surface: '#ffffff',
+          subtle: '#f2f0eb',
+          border: '#e5e2dc',
         },
+        ink: {
+          900: '#1c1917',
+          700: '#44403c',
+          500: '#78716c',
+          400: '#a8a29e',
+        },
+        brand: {
+          DEFAULT: '#0f2942',
+          hover: '#163b60',
+          active: '#0a1c2e',
+          subtle: '#eef3f8',
+          border: '#ccdbe7',
+        },
+      },
+      fontFamily: {
+        sans: [
+          '-apple-system',
+          'BlinkMacSystemFont',
+          '"Segoe UI"',
+          'Roboto',
+          '"Helvetica Neue"',
+          'Arial',
+          'sans-serif',
+        ],
       },
     },
   },

@@ -3,40 +3,95 @@
 @tailwind utilities;
 
 @layer base {
-  html {
-    @apply antialiased;
+  :root {
+    --bg-page: #f8f7f4;
+    --text-main: #1c1917;
+    --text-muted: #57534e;
+    --border-color: #e5e2dc;
+    --accent: #0f2942;
   }
+
+  html {
+    @apply antialiased scroll-smooth;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+
   body {
-    @apply bg-slate-50 text-slate-900;
+    background-color: var(--bg-page);
+    color: var(--text-main);
+    line-height: 1.5;
+  }
+
+  /* Form and interactive accessible focus defaults */
+  :focus-visible {
+    outline: 2px solid #0f2942;
+    outline-offset: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, ::before, ::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
   }
 }
 
 @layer components {
+  /* Buttons */
   .btn {
-    @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-medium
-           transition-colors disabled:cursor-not-allowed disabled:opacity-50;
+    @apply inline-flex items-center justify-center gap-2 rounded-md px-3.5 py-2 text-sm font-medium
+           transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stone-900
+           focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50;
   }
+
   .btn-primary {
-    @apply btn bg-brand-600 text-white hover:bg-brand-700;
+    @apply btn bg-stone-900 text-stone-50 hover:bg-stone-800 active:bg-black;
   }
+
+  .btn-accent {
+    @apply btn bg-[#0f2942] text-white hover:bg-[#163b60] active:bg-[#0a1c2e];
+  }
+
   .btn-secondary {
-    @apply btn border border-slate-300 bg-white text-slate-700 hover:bg-slate-100;
+    @apply btn border border-stone-300 bg-white text-stone-800 hover:bg-stone-100 hover:text-stone-900;
   }
+
+  .btn-subtle {
+    @apply btn bg-stone-100 text-stone-800 hover:bg-stone-200;
+  }
+
   .btn-danger {
-    @apply btn border border-red-200 bg-white text-red-600 hover:bg-red-50;
+    @apply btn border border-red-200 bg-white text-red-700 hover:bg-red-50 hover:border-red-300;
   }
+
+  /* Inputs and Form controls */
   .input {
-    @apply w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm
-           placeholder:text-slate-400 focus:border-brand-500 focus:outline-none
-           focus:ring-2 focus:ring-brand-100;
+    @apply w-full rounded-md border border-stone-300 bg-white px-3 py-2 text-sm text-stone-900
+           placeholder:text-stone-400 focus:border-stone-900 focus:outline-none focus:ring-1 focus:ring-stone-900
+           disabled:bg-stone-50 disabled:text-stone-500;
   }
+
   .label {
-    @apply mb-1.5 block text-sm font-medium text-slate-700;
+    @apply mb-1.5 block text-xs font-semibold uppercase tracking-wider text-stone-700;
   }
+
+  /* Structural cards */
   .card {
-    @apply rounded-xl border border-slate-200 bg-white shadow-sm;
+    @apply rounded-lg border border-stone-200/90 bg-white shadow-[0_1px_2px_rgba(0,0,0,0.03)];
   }
+
+  .card-flat {
+    @apply rounded-lg border border-stone-200 bg-white;
+  }
+
   .chip {
-    @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium;
+    @apply inline-flex items-center rounded px-2 py-0.5 text-xs font-medium border;
+  }
+
+  /* Skeleton Loaders */
+  .skeleton {
+    @apply animate-pulse bg-stone-200 rounded;
   }
 }

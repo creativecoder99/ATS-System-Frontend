@@ -5,28 +5,28 @@ import type { Job } from '../types';
 
 export function JobCard({ job }: { job: Job }) {
   return (
-    <article className="card p-5 transition-shadow hover:shadow-md">
+    <article className="card p-5 transition-colors hover:border-stone-400">
       <div className="flex items-start justify-between gap-4">
         <div className="min-w-0">
           <Link
             to={`/jobs/${job._id}`}
-            className="text-base font-semibold text-slate-900 hover:text-brand-700"
+            className="text-base font-semibold text-stone-900 hover:text-[#0f2942]"
           >
             {job.title}
           </Link>
-          <p className="mt-0.5 text-sm text-slate-600">{job.company}</p>
+          <p className="mt-0.5 text-xs font-medium text-stone-600">{job.company}</p>
         </div>
-        <span className="shrink-0 text-xs text-slate-400">{formatRelativeDate(job.createdAt)}</span>
+        <span className="shrink-0 text-xs text-stone-400">{formatRelativeDate(job.createdAt)}</span>
       </div>
 
-      <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-slate-600">
+      <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-stone-600">
         <span>{job.location}</span>
-        <span className="text-slate-300">·</span>
+        <span className="text-stone-300">/</span>
         <span>{titleCase(job.workMode)}</span>
-        <span className="text-slate-300">·</span>
+        <span className="text-stone-300">/</span>
         <span>{titleCase(job.type)}</span>
-        <span className="text-slate-300">·</span>
-        <span className="font-medium text-slate-800">
+        <span className="text-stone-300">/</span>
+        <span className="font-semibold text-stone-900">
           {formatSalary(job.salaryMin, job.salaryMax)}
         </span>
       </div>
@@ -40,14 +40,17 @@ export function JobCard({ job }: { job: Job }) {
         </div>
       )}
 
-      <div className="mt-4 flex items-center justify-between border-t border-slate-100 pt-3">
-        <span className="text-xs text-slate-500">
+      <div className="mt-4 flex items-center justify-between border-t border-stone-100 pt-3 text-xs">
+        <span className="text-stone-500">
           {job.experienceMin === 0 ? 'Fresher friendly' : `${job.experienceMin}+ yrs experience`}
           {' · '}
           {job.applicantCount} applicant{job.applicantCount === 1 ? '' : 's'}
         </span>
-        <Link to={`/jobs/${job._id}`} className="text-sm font-medium text-brand-700 hover:underline">
-          View details →
+        <Link
+          to={`/jobs/${job._id}`}
+          className="font-semibold text-[#0f2942] hover:underline"
+        >
+          View posting
         </Link>
       </div>
     </article>

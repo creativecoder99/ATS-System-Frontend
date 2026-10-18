@@ -45,7 +45,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setAccessToken(json.data.accessToken);
         setUser(json.data.user);
       } catch {
-        // No valid cookie — the visitor is simply anonymous.
+        // No valid cookie - the visitor is simply anonymous.
       } finally {
         if (!cancelled) setLoading(false);
       }

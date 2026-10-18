@@ -1,8 +1,8 @@
 import type { ApplicationStatus } from '../types';
 
 /**
- * Indian salary figures are quoted in lakhs, not raw rupees — "₹8L – ₹14L"
- * is what a candidate here expects to read.
+ * Formats salary in Indian Lakhs (L) without em dashes or en dashes.
+ * Example: "₹8L to ₹14L".
  */
 export function formatSalary(min: number, max: number): string {
   if (!min && !max) return 'Not disclosed';
@@ -10,7 +10,7 @@ export function formatSalary(min: number, max: number): string {
     const value = n / 100_000;
     return `₹${Number.isInteger(value) ? value : value.toFixed(1)}L`;
   };
-  if (min && max) return `${lakh(min)} – ${lakh(max)}`;
+  if (min && max) return `${lakh(min)} to ${lakh(max)}`;
   return lakh(min || max);
 }
 
@@ -35,19 +35,21 @@ export function formatDate(iso: string): string {
   });
 }
 
+/**
+ * Restrained status styling without rainbow pastels.
+ */
 export const STATUS_STYLES: Record<ApplicationStatus, string> = {
-  applied: 'bg-slate-100 text-slate-700',
-  shortlisted: 'bg-blue-100 text-blue-700',
-  interview: 'bg-amber-100 text-amber-800',
-  offered: 'bg-emerald-100 text-emerald-700',
-  rejected: 'bg-red-100 text-red-700',
+  applied: 'bg-stone-100 text-stone-700 border-stone-200',
+  shortlisted: 'bg-stone-200 text-stone-800 border-stone-300 font-medium',
+  interview: 'bg-stone-800 text-stone-100 border-stone-900',
+  offered: 'bg-[#0f2942] text-white border-[#0f2942] font-medium',
+  rejected: 'bg-stone-100 text-stone-500 border-stone-200',
 };
 
 export function titleCase(value: string): string {
   return value.charAt(0).toUpperCase() + value.slice(1);
 }
 
-/** "1 year", "3 years", "Fresher" — avoids the "1 yrs" that reads as a bug. */
 export function formatExperience(years: number): string {
   if (years <= 0) return 'Fresher';
   return `${years} ${years === 1 ? 'year' : 'years'} experience`;

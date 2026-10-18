@@ -13,10 +13,17 @@ export function SavedJobs() {
 
   return (
     <div className="mx-auto max-w-4xl px-4 py-8">
-      <h1 className="text-2xl font-bold text-slate-900">Saved jobs</h1>
+      <div className="border-b border-warm-border pb-4">
+        <h1 className="text-2xl font-bold tracking-tight text-ink">Saved jobs</h1>
+        <p className="mt-1 text-sm text-ink-muted">
+          Positions you have bookmarked for future review and application.
+        </p>
+      </div>
 
       {isLoading ? (
-        <Spinner label="Loading saved jobs" />
+        <div className="mt-6">
+          <Spinner label="Loading saved jobs" />
+        </div>
       ) : isError ? (
         <div className="mt-6">
           <ErrorState
@@ -27,11 +34,11 @@ export function SavedJobs() {
       ) : data && data.data.length === 0 ? (
         <div className="mt-6">
           <EmptyState
-            title="Nothing saved yet"
-            description="Bookmark a job from its detail page and it will appear here for later."
+            title="No saved positions"
+            description="Bookmark relevant openings from the job search board to review compensation and submit later."
             action={
               <Link to="/jobs" className="btn-primary">
-                Browse jobs
+                Explore open jobs
               </Link>
             }
           />

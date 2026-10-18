@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { api } from '../lib/api';
 import { formatRelativeDate } from '../lib/format';
-import { EmptyState, ErrorState, Spinner, StatCard, StatusBadge } from '../components/ui';
+import { EmptyState, ErrorState, SkeletonList, StatCard, StatusBadge } from '../components/ui';
 import { useAuth } from '../hooks/useAuth';
 import { APPLICATION_STATUSES, type CandidateStats } from '../types';
 
@@ -14,12 +14,19 @@ export function CandidateDashboard() {
     queryFn: () => api.get<{ data: CandidateStats }>('/stats/candidate'),
   });
 
-  if (isLoading) return <Spinner label="Loading your dashboard" />;
+  if (isLoading) {
+    return (
+      <div className="mx-auto max-w-5xl px-4 py-8">
+        <SkeletonList count={3} />
+      </div>
+    );
+  }
+
   if (isError || !data) {
     return (
       <div className="mx-auto max-w-5xl px-4 py-12">
         <ErrorState
-          message={error instanceof Error ? error.message : 'Could not load dashboard'}
+          message={error instanceof Error ? error.message : 'Could not load your candidate dashboard'}
           onRetry={refetch}
         />
       </div>
@@ -29,43 +36,72 @@ export function CandidateDashboard() {
   const stats = data.data;
   const maxCount = Math.max(1, ...Object.values(stats.pipeline));
 
-  return (
-    <div className="mx-auto max-w-5xl px-4 py-8">
-      <h1 className="text-2xl font-bold text-slate-900">
-        Welcome back, {user?.name.split(' ')[0]}
-      </h1>
-      <p className="mt-1 text-sm text-slate-500">Here is how your job search is going.</p>
+  // Compute profile completeness score
+  let profileScore = 20; // baseline for having account
+  if (user?.headline) profileScore += 25;
+  if (user?.skills && user.skills.length > 0) profileScore += 25;
+  if (user?.experienceYears && user.experienceYears > 0) profileScore += 15;
+  if (user?.location) profileScore += 15;
 
-      <div className="mt-6 grid gap-4 sm:grid-cols-3">
-        <StatCard label="Applications sent" value={stats.totals.applications} />
-        <StatCard
-          label="Response rate"
-          value={`${stats.totals.responseRate}%`}
-          hint="Moved past the initial screen"
-        />
-        <StatCard label="Offers" value={stats.pipeline.offered} />
+  return (
+    <div className="mx-auto max-w-5xl px-4 sm:px-6 py-8 space-y-8">
+      {/* Title */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-stone-200">
+        <div>
+          <h1 className="text-2xl font-semibold tracking-tight text-stone-900">
+            Welcome back, {user?.name.split(' ')[0]}
+          </h1>
+          <p className="mt-1 text-xs text-stone-600">
+            Overview of your active applications and profile status.
+          </p>
+        </div>
+        <div className="flex items-center gap-2">
+          <Link to="/jobs" className="btn-accent text-xs px-3 py-2">
+            Explore Open Roles
+          </Link>
+          <Link to="/profile" className="btn-secondary text-xs px-3 py-2">
+            Edit Profile
+          </Link>
+        </div>
       </div>
 
-      <div className="mt-8 grid items-start gap-6 lg:grid-cols-2">
-        <section className="card p-6">
-          <h2 className="text-sm font-semibold text-slate-900">Your pipeline</h2>
-          <div className="mt-4 space-y-3">
+      {/* Top Stat Cards */}
+      <div className="grid gap-4 grid-cols-2 lg:grid-cols-4">
+        <StatCard label="Applications Sent" value={stats.totals.applications} hint="Total roles applied" />
+        <StatCard
+          label="Screening Response"
+          value={`${stats.totals.responseRate}%`}
+          hint="Advanced past applied stage"
+        />
+        <StatCard label="In Interview" value={stats.pipeline.interview || 0} hint="Active conversations" />
+        <StatCard label="Offers Extended" value={stats.pipeline.offered || 0} hint="Congratulations" />
+      </div>
+
+      <div className="grid gap-6 lg:grid-cols-12 items-start">
+        {/* Pipeline Distribution */}
+        <section className="card p-5 lg:col-span-6 space-y-4 border-stone-200">
+          <div className="flex items-center justify-between">
+            <h2 className="text-sm font-semibold text-stone-900">Application Progression</h2>
+            <Link to="/applications" className="text-xs font-semibold text-[#0f2942] hover:underline">
+              View all
+            </Link>
+          </div>
+
+          <div className="space-y-3 pt-1">
             {APPLICATION_STATUSES.map((status) => {
-              const count = stats.pipeline[status];
+              const count = stats.pipeline[status] || 0;
               return (
-                <div key={status} className="flex items-center gap-3">
+                <div key={status} className="flex items-center gap-3 text-xs">
                   <div className="w-24 shrink-0">
                     <StatusBadge status={status} />
                   </div>
-                  {/* Bar width is relative to the largest stage, so the shape
-                      of the funnel reads at a glance. */}
-                  <div className="h-2 flex-1 overflow-hidden rounded-full bg-slate-100">
+                  <div className="h-2 flex-1 overflow-hidden rounded bg-stone-100 border border-stone-200">
                     <div
-                      className="h-full rounded-full bg-brand-500 transition-all"
+                      className="h-full rounded bg-[#0f2942] transition-all"
                       style={{ width: `${(count / maxCount) * 100}%` }}
                     />
                   </div>
-                  <span className="w-8 text-right text-sm tabular-nums text-slate-600">
+                  <span className="w-8 text-right font-medium tabular-nums text-stone-700">
                     {count}
                   </span>
                 </div>
@@ -74,55 +110,94 @@ export function CandidateDashboard() {
           </div>
         </section>
 
-        <section className="card p-6">
-          <div className="flex items-baseline justify-between">
-            <h2 className="text-sm font-semibold text-slate-900">Recent applications</h2>
-            <Link to="/applications" className="text-xs font-medium text-brand-700 hover:underline">
-              View all
+        {/* Profile Strength & Completeness Tracker */}
+        <section className="card p-5 lg:col-span-6 space-y-4 border-stone-200">
+          <div className="flex items-center justify-between">
+            <h2 className="text-sm font-semibold text-stone-900">Profile Readiness</h2>
+            <span className="text-xs font-bold text-stone-800">{profileScore}% complete</span>
+          </div>
+
+          <div className="h-2 w-full overflow-hidden rounded bg-stone-100 border border-stone-200">
+            <div
+              className="h-full rounded bg-stone-800 transition-all"
+              style={{ width: `${profileScore}%` }}
+            />
+          </div>
+
+          <div className="space-y-2 pt-1 text-xs text-stone-600">
+            <div className="flex items-center justify-between">
+              <span>Headline & role target</span>
+              <span className={user?.headline ? 'text-stone-900 font-medium' : 'text-stone-400'}>
+                {user?.headline ? 'Verified' : 'Pending'}
+              </span>
+            </div>
+            <div className="flex items-center justify-between">
+              <span>Technical skills inventory</span>
+              <span className={user?.skills?.length ? 'text-stone-900 font-medium' : 'text-stone-400'}>
+                {user?.skills?.length ? `${user.skills.length} skills listed` : 'Pending'}
+              </span>
+            </div>
+            <div className="flex items-center justify-between">
+              <span>Verified location</span>
+              <span className={user?.location ? 'text-stone-900 font-medium' : 'text-stone-400'}>
+                {user?.location ?? 'Not specified'}
+              </span>
+            </div>
+          </div>
+
+          <div className="pt-2 border-t border-stone-100">
+            <Link to="/profile" className="text-xs font-semibold text-[#0f2942] hover:underline">
+              Complete profile to increase recruiter match score →
+            </Link>
+          </div>
+        </section>
+
+        {/* Recent Applications Feed */}
+        <section className="card p-5 lg:col-span-12 space-y-4 border-stone-200">
+          <div className="flex items-center justify-between">
+            <h2 className="text-sm font-semibold text-stone-900">Recent Applications</h2>
+            <Link to="/applications" className="text-xs font-semibold text-[#0f2942] hover:underline">
+              Manage all ({stats.totals.applications})
             </Link>
           </div>
 
           {stats.recent.length === 0 ? (
-            <p className="mt-6 text-sm text-slate-500">
-              You haven&apos;t applied to anything yet.{' '}
-              <Link to="/jobs" className="font-medium text-brand-700 hover:underline">
-                Browse jobs
-              </Link>
-              .
-            </p>
+            <EmptyState
+              title="No applications submitted yet"
+              description="Browse active openings and apply with your structured resume."
+              action={
+                <Link to="/jobs" className="btn-primary text-xs">
+                  Browse open positions
+                </Link>
+              }
+            />
           ) : (
-            <ul className="mt-4 divide-y divide-slate-100">
+            <ul className="divide-y divide-stone-100 text-xs">
               {stats.recent.map((application) => (
                 <li key={application._id} className="flex items-center justify-between gap-3 py-3">
                   <div className="min-w-0">
-                    <p className="truncate text-sm font-medium text-slate-900">
-                      {application.job?.title ?? 'Job removed'}
+                    <p className="truncate font-medium text-stone-900">
+                      {application.job?.title ?? 'Position removed'}
                     </p>
-                    <p className="text-xs text-slate-500">
-                      {application.job?.company} · {formatRelativeDate(application.createdAt)}
+                    <p className="text-stone-500 mt-0.5">
+                      {application.job?.company ?? 'Unknown company'} · Applied {formatRelativeDate(application.createdAt)}
                     </p>
                   </div>
-                  <StatusBadge status={application.status} />
+                  <div className="flex items-center gap-3 shrink-0">
+                    <StatusBadge status={application.status} />
+                    <Link
+                      to="/applications"
+                      className="text-xs font-semibold text-[#0f2942] hover:underline"
+                    >
+                      Track
+                    </Link>
+                  </div>
                 </li>
               ))}
             </ul>
           )}
         </section>
       </div>
-
-      {stats.totals.applications === 0 && (
-        <div className="mt-8">
-          <EmptyState
-            title="Start applying"
-            description="Search for roles that match your skills and track every application from this dashboard."
-            action={
-              <Link to="/jobs" className="btn-primary">
-                Browse jobs
-              </Link>
-            }
-          />
-        </div>
-      )}
     </div>
   );
 }

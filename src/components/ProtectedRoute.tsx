@@ -6,7 +6,7 @@ import type { Role } from '../types';
 /**
  * Gate for authenticated routes.
  *
- * This is a UX guard, not a security boundary — every protected endpoint is
+ * This is a UX guard, not a security boundary - every protected endpoint is
  * independently authorised on the server. Blocking here only saves the user a
  * pointless round trip to a page they cannot use.
  */

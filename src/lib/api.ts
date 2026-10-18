@@ -1,7 +1,7 @@
 /**
- * Thin fetch wrapper around the HireDesk API.
+ * Thin fetch wrapper around the HireHive API.
  *
- * The access token is held in memory only — never localStorage — so an XSS
+ * The access token is held in memory only - never localStorage - so an XSS
  * payload cannot read it off disk. It is restored on page load by calling
  * /auth/refresh, which reads the httpOnly cookie the browser sends for us.
  */

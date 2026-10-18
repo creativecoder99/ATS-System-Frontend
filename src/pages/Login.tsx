@@ -39,15 +39,21 @@ export function Login() {
   return (
     <div className="mx-auto max-w-md px-4 py-12">
       <div className="card p-8">
-        <h1 className="text-2xl font-bold text-slate-900">Welcome back</h1>
-        <p className="mt-1 text-sm text-slate-500">Log in to your HireDesk account.</p>
+        <div className="flex items-center gap-2 mb-2">
+          <span className="flex h-7 w-7 items-center justify-center rounded bg-brand-900 text-xs font-bold text-white tracking-wider">
+            HH
+          </span>
+          <span className="text-sm font-semibold tracking-tight text-ink">HireHive</span>
+        </div>
+        <h1 className="text-2xl font-bold tracking-tight text-ink">Welcome back</h1>
+        <p className="mt-1 text-sm text-ink-muted">Sign in to your HireHive workspace.</p>
 
         <form onSubmit={handleSubmit} className="mt-6 space-y-4">
           <FormError message={error} />
 
           <div>
             <label htmlFor="email" className="label">
-              Email
+              Email address
             </label>
             <input
               id="email"
@@ -57,6 +63,7 @@ export function Login() {
               onChange={(e) => setEmail(e.target.value)}
               required
               autoComplete="email"
+              placeholder="name@company.com"
             />
           </div>
 
@@ -76,34 +83,35 @@ export function Login() {
           </div>
 
           <button type="submit" className="btn-primary w-full" disabled={submitting}>
-            {submitting ? 'Logging in…' : 'Log in'}
+            {submitting ? 'Signing in...' : 'Sign in'}
           </button>
         </form>
 
-        <div className="mt-6 rounded-lg bg-slate-50 p-4">
-          <p className="text-xs font-medium text-slate-600">Demo accounts (after running the seed)</p>
-          <div className="mt-2 flex gap-2">
+        <div className="mt-6 rounded border border-warm-border bg-warm-surface p-3.5">
+          <p className="text-xs font-semibold text-ink">Demo credentials</p>
+          <p className="mt-0.5 text-xs text-ink-muted">Click to auto-fill verified seed accounts:</p>
+          <div className="mt-2.5 grid grid-cols-2 gap-2">
             <button
               type="button"
-              className="btn-secondary flex-1 text-xs"
+              className="btn-secondary text-xs py-1.5"
               onClick={() => fillDemo('abhinav@example.com')}
             >
-              Candidate
+              Candidate demo
             </button>
             <button
               type="button"
-              className="btn-secondary flex-1 text-xs"
+              className="btn-secondary text-xs py-1.5"
               onClick={() => fillDemo('priya@techcorp.in')}
             >
-              Recruiter
+              Recruiter demo
             </button>
           </div>
         </div>
 
-        <p className="mt-6 text-center text-sm text-slate-600">
-          Don&apos;t have an account?{' '}
-          <Link to="/register" className="font-medium text-brand-700 hover:underline">
-            Sign up
+        <p className="mt-6 text-center text-sm text-ink-muted">
+          Do not have an account?{' '}
+          <Link to="/register" className="font-semibold text-brand-900 hover:underline">
+            Create an account
           </Link>
         </p>
       </div>

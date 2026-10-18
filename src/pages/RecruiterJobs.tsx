@@ -46,10 +46,15 @@ export function RecruiterJobs() {
 
   return (
     <div className="mx-auto max-w-4xl px-4 py-8">
-      <div className="flex items-center justify-between gap-4">
-        <h1 className="text-2xl font-bold text-slate-900">My job postings</h1>
-        <Link to="/recruiter/jobs/new" className="btn-primary">
-          Post a job
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-warm-border pb-4">
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight text-ink">Active job postings</h1>
+          <p className="mt-1 text-sm text-ink-muted">
+            Manage your open positions, view applicants, and screen candidates.
+          </p>
+        </div>
+        <Link to="/recruiter/jobs/new" className="btn-primary sm:self-end">
+          Create new job
         </Link>
       </div>
 
@@ -58,75 +63,88 @@ export function RecruiterJobs() {
       </div>
 
       {isLoading ? (
-        <Spinner label="Loading your jobs" />
+        <Spinner label="Loading your postings" />
       ) : isError ? (
         <ErrorState
-          message={queryError instanceof Error ? queryError.message : 'Could not load your jobs'}
+          message={queryError instanceof Error ? queryError.message : 'Could not load your job postings'}
           onRetry={refetch}
         />
       ) : data && data.data.length === 0 ? (
-        <EmptyState
-          title="No jobs posted yet"
-          description="Create your first posting and start receiving applications."
-          action={
-            <Link to="/recruiter/jobs/new" className="btn-primary">
-              Post a job
-            </Link>
-          }
-        />
+        <div className="mt-6">
+          <EmptyState
+            title="No active job postings"
+            description="Create your first job listing to start receiving candidate applications and running AI evaluations."
+            action={
+              <Link to="/recruiter/jobs/new" className="btn-primary">
+                Post your first role
+              </Link>
+            }
+          />
+        </div>
       ) : (
-        <div className="mt-4 space-y-4">
+        <div className="mt-6 space-y-4">
           {data?.data.map((job) => (
             <article key={job._id} className="card p-5">
-              <div className="flex items-start justify-between gap-4">
+              <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
                 <div className="min-w-0">
-                  <Link
-                    to={`/jobs/${job._id}`}
-                    className="text-base font-semibold text-slate-900 hover:text-brand-700"
-                  >
-                    {job.title}
-                  </Link>
-                  <p className="mt-0.5 text-sm text-slate-600">
+                  <div className="flex items-center gap-2">
+                    <Link
+                      to={`/jobs/${job._id}`}
+                      className="text-base font-semibold text-ink hover:text-brand-900"
+                    >
+                      {job.title}
+                    </Link>
+                    <span
+                      className={`rounded px-2 py-0.5 text-xs font-semibold uppercase tracking-wider ${
+                        job.status === 'open'
+                          ? 'bg-emerald-50 text-emerald-800 border border-emerald-200'
+                          : 'bg-warm-highlight text-ink-muted border border-warm-border'
+                      }`}
+                    >
+                      {job.status}
+                    </span>
+                  </div>
+                  <p className="mt-1 text-sm text-ink-muted">
                     {job.location} · {formatSalary(job.salaryMin, job.salaryMax)} ·{' '}
-                    {job.openings} opening{job.openings === 1 ? '' : 's'}
+                    {job.openings} opening{job.openings === 1 ? '' : 's'} · {job.type}
                   </p>
-                  <p className="mt-1 text-xs text-slate-400">
-                    Posted {formatDate(job.createdAt)}
+                  <p className="mt-1 text-xs text-ink-muted">
+                    Created on {formatDate(job.createdAt)}
                   </p>
                 </div>
-                <span
-                  className={`chip ${
-                    job.status === 'open'
-                      ? 'bg-emerald-100 text-emerald-700'
-                      : 'bg-slate-100 text-slate-600'
-                  }`}
-                >
-                  {job.status}
-                </span>
+
+                <div className="flex items-center gap-2">
+                  <Link
+                    to={`/recruiter/jobs/${job._id}/applicants`}
+                    className="btn-primary text-xs font-medium"
+                  >
+                    View applicants ({job.applicantCount})
+                  </Link>
+                </div>
               </div>
 
-              <div className="mt-4 flex flex-wrap items-center gap-2 border-t border-slate-100 pt-4">
-                <Link to={`/recruiter/jobs/${job._id}/applicants`} className="btn-primary">
-                  Applicants ({job.applicantCount})
-                </Link>
-                <Link to={`/recruiter/jobs/${job._id}/edit`} className="btn-secondary">
-                  Edit
-                </Link>
+              <div className="mt-4 flex flex-wrap items-center justify-between gap-2 border-t border-warm-border pt-3">
+                <div className="flex items-center gap-2">
+                  <Link to={`/recruiter/jobs/${job._id}/edit`} className="btn-secondary text-xs">
+                    Edit posting
+                  </Link>
+                  <button
+                    type="button"
+                    className="btn-secondary text-xs"
+                    onClick={() => toggleStatus.mutate(job)}
+                    disabled={toggleStatus.isPending}
+                  >
+                    {job.status === 'open' ? 'Close job' : 'Reopen job'}
+                  </button>
+                </div>
+
                 <button
                   type="button"
-                  className="btn-secondary"
-                  onClick={() => toggleStatus.mutate(job)}
-                  disabled={toggleStatus.isPending}
-                >
-                  {job.status === 'open' ? 'Close' : 'Reopen'}
-                </button>
-                <button
-                  type="button"
-                  className="btn-danger ml-auto"
+                  className="btn-danger text-xs"
                   onClick={() => handleDelete(job)}
                   disabled={remove.isPending}
                 >
-                  Delete
+                  Delete posting
                 </button>
               </div>
             </article>
