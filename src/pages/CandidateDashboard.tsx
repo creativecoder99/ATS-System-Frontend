@@ -7,6 +7,7 @@ import { EmptyState, ErrorState, SkeletonList, StatusBadge } from '../components
 import { useAuth } from '../hooks/useAuth';
 import { APPLICATION_STATUSES, type ApplicationStatus, type CandidateStats } from '../types';
 import { CandidateAiAdvisor } from '../components/CandidateAiAdvisor';
+import { VerificationBadge } from '../components/VerificationBadge';
 
 type DashboardTab = 'overview' | 'ai-advisor' | 'profile';
 
@@ -99,13 +100,16 @@ export function CandidateDashboard() {
             </div>
 
             <div>
-              <div className="flex items-center gap-2">
+              <div className="flex flex-wrap items-center gap-2">
                 <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-ink">
                   Welcome back, {user?.name.split(' ')[0]}
                 </h1>
-                <span className="chip bg-warm-subtle text-ink-muted text-[11px] font-semibold">
-                  Candidate Portal
-                </span>
+                <VerificationBadge
+                  isVerified={user?.isVerified}
+                  status={user?.verificationStatus}
+                  role="candidate"
+                  size="sm"
+                />
               </div>
               <p className="text-xs text-ink-muted mt-0.5">
                 {user?.headline || 'Software Engineering Candidate'}

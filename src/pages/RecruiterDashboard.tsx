@@ -12,10 +12,13 @@ import {
 } from '../components/ui';
 import { APPLICATION_STATUSES, type RecruiterStats } from '../types';
 import { RecruiterAiAssistant } from '../components/RecruiterAiAssistant';
+import { VerificationBadge } from '../components/VerificationBadge';
+import { useAuth } from '../hooks/useAuth';
 
 type RecruiterTab = 'pipeline' | 'ai-copilot' | 'analytics';
 
 export function RecruiterDashboard() {
+  const { user } = useAuth();
   const [activeTab, setActiveTab] = useState<RecruiterTab>('pipeline');
 
   const { data, isLoading, isError, error, refetch } = useQuery({
@@ -85,9 +88,17 @@ export function RecruiterDashboard() {
                 Talent Operations & Structured Hiring Suite
               </span>
             </div>
-            <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-ink mt-1">
-              Recruiting Pipeline & Intelligence Dashboard
-            </h1>
+            <div className="flex flex-wrap items-center gap-2 mt-1">
+              <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-ink">
+                Recruiting Pipeline & Intelligence Dashboard
+              </h1>
+              <VerificationBadge
+                isVerified={user?.isVerified}
+                status={user?.verificationStatus}
+                role="recruiter"
+                size="sm"
+              />
+            </div>
             <p className="mt-0.5 text-xs text-ink-muted">
               Objective candidate scorecards, automated screening SLAs, and HireHive AI candidate search.
             </p>

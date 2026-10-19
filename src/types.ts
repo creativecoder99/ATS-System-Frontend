@@ -12,6 +12,21 @@ export const APPLICATION_STATUSES: ApplicationStatus[] = [
   'rejected',
 ];
 
+export type VerificationStatus = 'unverified' | 'pending' | 'verified' | 'rejected';
+
+export interface VerificationDocument {
+  _id?: string;
+  docType: string;
+  title: string;
+  fileUrl: string;
+  originalName: string;
+  fileSize?: number;
+  mimeType?: string;
+  uploadedAt: string;
+  status: 'pending' | 'verified' | 'rejected';
+  adminNotes?: string;
+}
+
 export interface User {
   _id: string;
   name: string;
@@ -22,6 +37,36 @@ export interface User {
   skills: string[];
   experienceYears: number;
   company?: string;
+  resumeUrl?: string;
+
+  // Contact & Social
+  phone?: string;
+  bio?: string;
+  linkedinUrl?: string;
+  portfolioUrl?: string;
+  githubUrl?: string;
+
+  // Candidate Details
+  education?: string;
+  currentCompany?: string;
+  currentRole?: string;
+
+  // Recruiter Details
+  designation?: string;
+  companyWebsite?: string;
+  industry?: string;
+  companySize?: string;
+  officeAddress?: string;
+
+  // Trust & Verification
+  isVerified: boolean;
+  verificationStatus: VerificationStatus;
+  verificationDocuments?: VerificationDocument[];
+  verificationSubmittedAt?: string;
+  verifiedAt?: string;
+  verifiedBy?: string;
+  verificationRejectionReason?: string;
+
   createdAt: string;
 }
 
@@ -39,7 +84,7 @@ export interface Job {
   experienceMin: number;
   openings: number;
   status: JobStatus;
-  postedBy: string | Pick<User, '_id' | 'name' | 'company' | 'email'>;
+  postedBy: string | Pick<User, '_id' | 'name' | 'company' | 'email' | 'isVerified' | 'verificationStatus'>;
   applicantCount: number;
   createdAt: string;
   hasApplied?: boolean;

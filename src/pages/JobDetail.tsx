@@ -4,6 +4,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { api, ApiRequestError } from '../lib/api';
 import { formatDate, formatSalary, titleCase } from '../lib/format';
 import { ErrorState, FormError, Modal, Spinner, Tag } from '../components/ui';
+import { VerificationBadge } from '../components/VerificationBadge';
 import { useAuth } from '../hooks/useAuth';
 import type { Job } from '../types';
 
@@ -14,6 +15,7 @@ export function JobDetail() {
   const queryClient = useQueryClient();
 
   const [showApply, setShowApply] = useState(false);
+  const [justApplied, setJustApplied] = useState(false);
 
   const { data, isLoading, isError, error, refetch } = useQuery({
     queryKey: ['job', id],
@@ -53,10 +55,42 @@ export function JobDetail() {
       </Link>
 
       <div className="card p-6 sm:p-8 space-y-6 border-stone-200">
+        {(job.hasApplied || justApplied) && (
+          <div className="rounded-lg border border-emerald-200 bg-emerald-50/95 p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-emerald-950 shadow-2xs animate-fade-in">
+            <div className="flex items-center gap-3">
+              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-emerald-600 text-white font-bold text-sm shadow-xs">
+                ✓
+              </span>
+              <div>
+                <p className="text-xs font-bold text-emerald-950">Applied Successfully</p>
+                <p className="text-[11px] text-emerald-800">
+                  Your application has been submitted to {job.company}. You can monitor review progress in your dashboard.
+                </p>
+              </div>
+            </div>
+            <Link
+              to="/dashboard"
+              className="btn-secondary text-xs py-1.5 px-3 bg-white border-emerald-300 text-emerald-900 hover:bg-emerald-100 shrink-0 font-semibold self-start sm:self-center"
+            >
+              View Application →
+            </Link>
+          </div>
+        )}
+
         <div className="flex items-start justify-between gap-6">
           <div>
             <h1 className="text-2xl font-semibold tracking-tight text-stone-900">{job.title}</h1>
-            <p className="mt-1 text-sm font-medium text-stone-600">{job.company}</p>
+            <div className="mt-1 flex flex-wrap items-center gap-2">
+              <span className="text-sm font-medium text-stone-600">{job.company}</span>
+              {typeof job.postedBy === 'object' && job.postedBy !== null && (
+                <VerificationBadge
+                  isVerified={job.postedBy.isVerified}
+                  status={job.postedBy.verificationStatus}
+                  role="recruiter"
+                  size="sm"
+                />
+              )}
+            </div>
           </div>
           {job.status === 'closed' && (
             <span className="chip bg-stone-200 text-stone-700 font-semibold border-stone-300">
@@ -136,16 +170,18 @@ export function JobDetail() {
             </div>
           )}
 
-          {job.hasApplied && (
-            <div className="flex items-center gap-3 text-xs">
-              <span className="chip bg-brand-900 text-white font-semibold">Applied</span>
-              <Link to="/applications" className="font-semibold text-brand-900 hover:underline">
-                View status in your applications list
+          {(job.hasApplied || justApplied) && (
+            <div className="flex flex-wrap items-center gap-3 text-xs">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-emerald-50 border border-emerald-200 font-semibold text-emerald-800">
+                <span>✓ Applied Successfully</span>
+              </span>
+              <Link to="/dashboard" className="font-semibold text-brand-900 hover:underline">
+                View status in your Candidate Dashboard
               </Link>
             </div>
           )}
 
-          {canApply && (
+          {canApply && !justApplied && (
             <button
               type="button"
               className="btn-primary text-xs px-5 py-2"
@@ -218,20 +254,35 @@ export function JobDetail() {
       <Modal
         isOpen={showApply}
         onClose={() => setShowApply(false)}
-        title={`Apply for ${job.title}`}
+        title={justApplied ? 'Application Status' : `Apply for ${job.title}`}
         maxWidth="max-w-xl"
       >
-        <ApplyForm job={job} onClose={() => setShowApply(false)} />
+        <ApplyForm
+          job={job}
+          onClose={() => setShowApply(false)}
+          onSuccessApplied={() => {
+            setJustApplied(true);
+          }}
+        />
       </Modal>
     </div>
   );
 }
 
-function ApplyForm({ job, onClose }: { job: Job; onClose: () => void }) {
+function ApplyForm({
+  job,
+  onClose,
+  onSuccessApplied,
+}: {
+  job: Job;
+  onClose: () => void;
+  onSuccessApplied: () => void;
+}) {
   const queryClient = useQueryClient();
   const [coverLetter, setCoverLetter] = useState('');
   const [resume, setResume] = useState<File | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [appliedSuccess, setAppliedSuccess] = useState(false);
 
   const applyMutation = useMutation({
     mutationFn: (body: FormData) => api.postForm(`/jobs/${job._id}/apply`, body),
@@ -239,7 +290,8 @@ function ApplyForm({ job, onClose }: { job: Job; onClose: () => void }) {
       queryClient.invalidateQueries({ queryKey: ['job', job._id] });
       queryClient.invalidateQueries({ queryKey: ['my-applications'] });
       queryClient.invalidateQueries({ queryKey: ['candidate-stats'] });
-      onClose();
+      setAppliedSuccess(true);
+      onSuccessApplied();
     },
     onError: (err) =>
       setError(err instanceof ApiRequestError ? err.message : 'Could not submit application'),
@@ -260,6 +312,41 @@ function ApplyForm({ job, onClose }: { job: Job; onClose: () => void }) {
 
     applyMutation.mutate(formData);
   };
+
+  if (appliedSuccess) {
+    return (
+      <div className="py-6 px-4 text-center space-y-4 animate-fade-in">
+        <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-emerald-100 text-emerald-600 shadow-xs">
+          <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+          </svg>
+        </div>
+        <div className="space-y-1">
+          <h3 className="text-lg font-bold text-ink">Applied Successfully!</h3>
+          <p className="text-xs text-ink-muted max-w-md mx-auto">
+            Your application for <strong className="text-ink">{job.title}</strong> at{' '}
+            <strong className="text-ink">{job.company}</strong> has been received and queued for evaluation.
+          </p>
+        </div>
+        <div className="rounded-lg border border-emerald-200 bg-emerald-50/80 p-3.5 text-xs text-emerald-900 max-w-md mx-auto text-left space-y-1.5">
+          <p className="font-semibold text-emerald-950">Next steps in your pipeline:</p>
+          <ul className="list-disc list-inside space-y-0.5 text-emerald-800 text-[11px]">
+            <li>Resume parsed and indexed for objective technical matching</li>
+            <li>Recruiter team at {job.company} notified</li>
+            <li>Track status updates and interview notifications in your Candidate Dashboard</li>
+          </ul>
+        </div>
+        <div className="flex items-center justify-center gap-3 pt-2">
+          <Link to="/dashboard" className="btn-primary text-xs px-4 py-2 font-semibold">
+            Go to Candidate Dashboard →
+          </Link>
+          <button type="button" onClick={onClose} className="btn-secondary text-xs px-4 py-2">
+            Done
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4 text-xs">
@@ -310,7 +397,7 @@ function ApplyForm({ job, onClose }: { job: Job; onClose: () => void }) {
           className="btn-accent text-xs px-4"
           disabled={applyMutation.isPending}
         >
-          {applyMutation.isPending ? 'Submitting...' : 'Submit Application'}
+          {applyMutation.isPending ? 'Submitting Application...' : 'Submit Application'}
         </button>
       </div>
     </form>

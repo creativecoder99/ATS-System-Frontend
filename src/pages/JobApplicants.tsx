@@ -17,6 +17,7 @@ import {
   Tag,
 } from '../components/ui';
 import { ScorecardModal, type ScorecardSubmission } from '../components/ScorecardModal';
+import { VerificationBadge } from '../components/VerificationBadge';
 import {
   APPLICATION_STATUSES,
   type Application,
@@ -374,8 +375,16 @@ export function JobApplicants() {
                 {/* Header row */}
                 <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
                   <div>
-                    <div className="flex items-center gap-2">
+                    <div className="flex flex-wrap items-center gap-2">
                       <h2 className="text-base font-semibold text-stone-900">{displayName}</h2>
+                      {!blindMode && (
+                        <VerificationBadge
+                          isVerified={application.applicant.isVerified}
+                          status={application.applicant.verificationStatus}
+                          role="candidate"
+                          size="sm"
+                        />
+                      )}
                       <StatusBadge status={application.status} />
 
                       {/* Greenhouse Scorecard Badge */}

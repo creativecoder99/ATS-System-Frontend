@@ -23,7 +23,15 @@ export function Login() {
       const user = await login(email, password);
       // Send them back where they came from, or to the dashboard for their role.
       const from = (location.state as { from?: string } | null)?.from;
-      navigate(from ?? (user.role === 'candidate' ? '/dashboard' : '/recruiter'), { replace: true });
+      navigate(
+        from ??
+          (user.role === 'candidate'
+            ? '/dashboard'
+            : user.role === 'admin'
+            ? '/profile'
+            : '/recruiter'),
+        { replace: true }
+      );
     } catch (err) {
       setError(err instanceof ApiRequestError ? err.message : 'Could not log in. Try again.');
     } finally {
@@ -93,20 +101,27 @@ export function Login() {
         <div className="mt-6 rounded border border-warm-border bg-warm-surface p-3.5">
           <p className="text-xs font-semibold text-ink">Demo credentials</p>
           <p className="mt-0.5 text-xs text-ink-muted">Click to auto-fill verified seed accounts:</p>
-          <div className="mt-2.5 grid grid-cols-2 gap-2">
+          <div className="mt-2.5 grid grid-cols-3 gap-2">
             <button
               type="button"
               className="btn-secondary text-xs py-1.5"
               onClick={() => fillDemo('abhinav@example.com')}
             >
-              Candidate demo
+              Candidate
             </button>
             <button
               type="button"
               className="btn-secondary text-xs py-1.5"
               onClick={() => fillDemo('priya@techcorp.in')}
             >
-              Recruiter demo
+              Recruiter
+            </button>
+            <button
+              type="button"
+              className="btn-secondary text-xs py-1.5"
+              onClick={() => fillDemo('admin@hirehive.com')}
+            >
+              Admin
             </button>
           </div>
         </div>
