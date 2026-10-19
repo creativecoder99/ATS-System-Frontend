@@ -116,17 +116,64 @@ export interface SearchApplicantResult {
   matchSummary: string;
 }
 
+export interface RecruiterAiCandidate {
+  applicationId: string;
+  candidateName: string;
+  jobTitle: string;
+  jobId: string;
+  score: number;
+  skills: string[];
+  experienceYears: number;
+  location: string;
+  strengths: string[];
+  verdict: string;
+}
+
+export interface RecruiterAiResponse {
+  answer: string;
+  topCandidates: RecruiterAiCandidate[];
+  suggestedAction?: 'interview' | 'shortlist' | 'review';
+  usedLlm: boolean;
+}
+
+export interface CandidateAiJob {
+  jobId: string;
+  title: string;
+  company: string;
+  location: string;
+  workMode: string;
+  type: string;
+  salaryRange: string;
+  score: number;
+  matchReasons: string[];
+  experienceRequirement: string;
+  requiredSkills: string[];
+}
+
+export interface CandidateAiResponse {
+  answer: string;
+  recommendedJobs: CandidateAiJob[];
+  tips?: string[];
+  usedLlm: boolean;
+}
+
 export interface CopilotResponse {
   answer: string;
   suggestedAction?: 'shortlist' | 'interview' | 'review';
   topCandidates?: {
-    candidateId: string;
-    name: string;
+    candidateId?: string;
+    applicationId?: string;
+    name?: string;
+    candidateName?: string;
     score: number;
     skills: string[];
-    summary: string;
+    summary?: string;
+    verdict?: string;
+    strengths?: string[];
   }[];
+  usedLlm?: boolean;
 }
+
 
 export interface Pagination {
   page: number;

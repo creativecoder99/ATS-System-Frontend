@@ -10,12 +10,14 @@ import {
   StatusBadge,
 } from '../components/ui';
 import { APPLICATION_STATUSES, type RecruiterStats } from '../types';
+import { RecruiterAiAssistant } from '../components/RecruiterAiAssistant';
 
 export function RecruiterDashboard() {
   const { data, isLoading, isError, error, refetch } = useQuery({
     queryKey: ['recruiter-stats'],
     queryFn: () => api.get<{ data: RecruiterStats }>('/stats/recruiter'),
   });
+
 
   if (isLoading) {
     return (
@@ -127,7 +129,12 @@ export function RecruiterDashboard() {
           }
         />
       ) : (
-        <div className="grid gap-6 lg:grid-cols-12 items-start">
+        <>
+          {/* Gemini AI Hiring Copilot Panel */}
+          <RecruiterAiAssistant />
+
+          <div className="grid gap-6 lg:grid-cols-12 items-start">
+
           {/* Candidate Pipeline Funnel */}
           <section className="card p-5 lg:col-span-7 space-y-4 border-stone-200">
             <div className="flex items-center justify-between">
@@ -324,7 +331,9 @@ export function RecruiterDashboard() {
             </div>
           </section>
         </div>
+      </>
       )}
     </div>
   );
 }
+

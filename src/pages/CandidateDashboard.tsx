@@ -5,8 +5,10 @@ import { formatRelativeDate } from '../lib/format';
 import { EmptyState, ErrorState, SkeletonList, StatCard, StatusBadge } from '../components/ui';
 import { useAuth } from '../hooks/useAuth';
 import { APPLICATION_STATUSES, type CandidateStats } from '../types';
+import { CandidateAiAdvisor } from '../components/CandidateAiAdvisor';
 
 export function CandidateDashboard() {
+
   const { user } = useAuth();
 
   const { data, isLoading, isError, error, refetch } = useQuery({
@@ -77,7 +79,11 @@ export function CandidateDashboard() {
         <StatCard label="Offers Extended" value={stats.pipeline.offered || 0} hint="Congratulations" />
       </div>
 
+      {/* Gemini AI Career Advisor Panel */}
+      <CandidateAiAdvisor />
+
       <div className="grid gap-6 lg:grid-cols-12 items-start">
+
         {/* Pipeline Distribution */}
         <section className="card p-5 lg:col-span-6 space-y-4 border-stone-200">
           <div className="flex items-center justify-between">
