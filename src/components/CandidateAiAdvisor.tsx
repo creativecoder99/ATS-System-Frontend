@@ -46,7 +46,7 @@ export function CandidateAiAdvisor() {
               ✦
             </span>
             <h2 className="text-base sm:text-lg font-bold tracking-tight text-ink">
-              Gemini AI Career Advisor
+              HireHive AI Career Advisor
             </h2>
             <span className="inline-flex items-center gap-1 rounded bg-emerald-50 px-2 py-0.5 text-[11px] font-semibold text-emerald-800 border border-emerald-200">
               <span className="h-1.5 w-1.5 rounded-full bg-emerald-600 animate-pulse" />

@@ -89,7 +89,7 @@ export function RecruiterDashboard() {
               Recruiting Pipeline & Intelligence Dashboard
             </h1>
             <p className="mt-0.5 text-xs text-ink-muted">
-              Objective candidate scorecards, automated screening SLAs, and Gemini AI candidate search.
+              Objective candidate scorecards, automated screening SLAs, and HireHive AI candidate search.
             </p>
           </div>
 
@@ -132,7 +132,7 @@ export function RecruiterDashboard() {
               }`}
             >
               <span className="flex h-2 w-2 rounded-full bg-emerald-600 animate-pulse" />
-              <span>Gemini AI Hiring Copilot</span>
+              <span>HireHive AI Hiring Copilot</span>
               <span className="chip bg-emerald-50 text-emerald-800 border-emerald-200 text-[10px] font-bold">
                 Live LLM
               </span>
@@ -311,7 +311,7 @@ export function RecruiterDashboard() {
                   <span className="flex h-6 w-6 items-center justify-center rounded bg-brand-900 text-xs font-bold text-white shadow-xs">
                     ✦
                   </span>
-                  <h3 className="text-sm font-bold text-ink">Gemini AI Hiring Copilot</h3>
+                  <h3 className="text-sm font-bold text-ink">HireHive AI Hiring Copilot</h3>
                 </div>
                 <p className="text-xs text-ink-muted leading-relaxed">
                   Need to identify the best candidates across all applicants or compare candidate profiles?
@@ -329,7 +329,7 @@ export function RecruiterDashboard() {
         </div>
       )}
 
-      {/* TAB 2: GEMINI AI HIRING COPILOT */}
+      {/* TAB 2: HIREHIVE AI HIRING COPILOT */}
       {activeTab === 'ai-copilot' && (
         <div className="space-y-6 animate-fade-in">
           <RecruiterAiAssistant />

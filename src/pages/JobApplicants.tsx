@@ -207,9 +207,9 @@ export function JobApplicants() {
           <button
             type="button"
             onClick={() => setCopilotOpen(true)}
-            className="btn-accent text-xs px-3 py-2"
+            className="btn-accent text-xs px-3 py-2 flex items-center gap-1.5"
           >
-            AI Hiring Assistant
+            <span>✦ HireHive AI Copilot</span>
           </button>
 
           {/* Blind Mode Toggle */}
@@ -669,7 +669,7 @@ export function JobApplicants() {
       <Modal
         isOpen={copilotOpen}
         onClose={() => setCopilotOpen(false)}
-        title="Recruiter AI Assistant Copilot"
+        title="HireHive AI Hiring Copilot"
         maxWidth="max-w-2xl"
       >
         <div className="space-y-4">

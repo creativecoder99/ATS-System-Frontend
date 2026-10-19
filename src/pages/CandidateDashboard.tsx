@@ -153,7 +153,7 @@ export function CandidateDashboard() {
               }`}
             >
               <span className="flex h-2 w-2 rounded-full bg-emerald-600 animate-pulse" />
-              <span>Gemini AI Career Advisor</span>
+              <span>HireHive AI Career Advisor</span>
               <span className="chip bg-emerald-50 text-emerald-800 border-emerald-200 text-[10px] font-bold">
                 Live LLM
               </span>
@@ -382,10 +382,10 @@ export function CandidateDashboard() {
                   <span className="flex h-6 w-6 items-center justify-center rounded bg-brand-900 text-xs font-bold text-white shadow-xs">
                     ✦
                   </span>
-                  <h3 className="text-sm font-bold text-ink">Gemini Career Advisor</h3>
+                  <h3 className="text-sm font-bold text-ink">HireHive AI Career Advisor</h3>
                 </div>
                 <p className="text-xs text-ink-muted leading-relaxed">
-                  Looking for roles matching your specific stack, city, or experience? Ask Gemini to curate opportunities.
+                  Looking for roles matching your specific stack, city, or experience? Ask HireHive AI to curate opportunities.
                 </p>
                 <button
                   type="button"
@@ -447,7 +447,7 @@ export function CandidateDashboard() {
         </div>
       )}
 
-      {/* TAB 2: GEMINI AI CAREER ADVISOR */}
+      {/* TAB 2: HIREHIVE AI CAREER ADVISOR */}
       {activeTab === 'ai-advisor' && (
         <div className="space-y-6 animate-fade-in">
           <CandidateAiAdvisor />
@@ -461,7 +461,7 @@ export function CandidateDashboard() {
             <div>
               <h2 className="text-lg font-bold text-ink">Technical Profile & Skills Inventory</h2>
               <p className="text-xs text-ink-muted mt-0.5">
-                These credentials are used by HireHive's semantic matching and Gemini AI to recommend relevant jobs.
+                These credentials are used by HireHive's semantic matching and AI career advisor to recommend relevant jobs.
               </p>
             </div>
             <Link to="/profile" className="btn-primary text-xs px-4 py-2">

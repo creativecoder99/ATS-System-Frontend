@@ -34,7 +34,7 @@ export function RecruiterAiAssistant({ initialJobId }: RecruiterAiAssistantProps
     },
     onError: (err) => {
       setErrorMessage(
-        err instanceof ApiRequestError ? err.message : 'Failed to query Gemini AI assistant'
+        err instanceof ApiRequestError ? err.message : 'Failed to query HireHive AI copilot'
       );
     },
   });
@@ -60,7 +60,7 @@ export function RecruiterAiAssistant({ initialJobId }: RecruiterAiAssistantProps
               ✦
             </span>
             <h2 className="text-base sm:text-lg font-bold tracking-tight text-ink">
-              Gemini AI Hiring Assistant
+              HireHive AI Hiring Copilot
             </h2>
             <span className="inline-flex items-center gap-1 rounded bg-emerald-50 px-2 py-0.5 text-[11px] font-semibold text-emerald-800 border border-emerald-200">
               <span className="h-1.5 w-1.5 rounded-full bg-emerald-600 animate-pulse" />
@@ -68,7 +68,7 @@ export function RecruiterAiAssistant({ initialJobId }: RecruiterAiAssistantProps
             </span>
           </div>
           <p className="text-xs text-ink-muted">
-            Ask Gemini to rank, compare, and recommend the best candidates across all applied applicants.
+            Ask HireHive AI to rank, compare, and recommend the best candidates across all applied applicants.
           </p>
         </div>
 
@@ -139,7 +139,7 @@ export function RecruiterAiAssistant({ initialJobId }: RecruiterAiAssistantProps
               </>
             ) : (
               <>
-                <span>✦ Ask Gemini</span>
+                <span>✦ Ask HireHive AI</span>
               </>
             )}
           </button>
@@ -171,7 +171,7 @@ export function RecruiterAiAssistant({ initialJobId }: RecruiterAiAssistantProps
           {/* AI Markdown Analysis Box */}
           <div className="rounded-lg border border-warm-border bg-white p-4 text-xs sm:text-sm leading-relaxed text-ink space-y-2 shadow-xs">
             <div className="flex items-center justify-between pb-2 border-b border-warm-border text-xs text-ink-muted">
-              <span className="font-semibold text-brand-900">Gemini Synthesis & Recommendation</span>
+              <span className="font-semibold text-brand-900">HireHive AI Synthesis & Recommendation</span>
               <span className="chip text-[10px] bg-emerald-50 text-emerald-800 border-emerald-200 font-semibold">
                 {aiResult.usedLlm ? 'Gemini 3.8 Flash' : 'Structured Heuristic'}
               </span>
