@@ -27,6 +27,44 @@ export function Home() {
   const [openRolesCount, setOpenRolesCount] = useState(12);
   const [avgCycleDays, setAvgCycleDays] = useState(38);
 
+  // AI Dual Intelligence Showcase State
+  const [aiShowcaseTab, setAiShowcaseTab] = useState<'candidate' | 'recruiter'>('candidate');
+  const [sampleJobQuery, setSampleJobQuery] = useState<'fullstack' | 'frontend' | 'backend'>('fullstack');
+  const [screeningBlindMode, setScreeningBlindMode] = useState(true);
+
+  const sampleRecommendedJobs = {
+    fullstack: {
+      title: 'Full Stack Developer (MERN)',
+      company: 'TechCorp India',
+      location: 'Bangalore (Hybrid)',
+      matchScore: 98,
+      salary: '₹8,00,000 - ₹14,00,000',
+      matchedSkills: ['React', 'Node.js', 'MongoDB', 'Express', 'TypeScript'],
+      reasoning:
+        'Direct alignment on core skills: React, Node.js, and MongoDB. Candidate matches the 1+ years experience threshold and compensation expectations perfectly.',
+    },
+    frontend: {
+      title: 'Frontend Engineer - React',
+      company: 'FinStack',
+      location: 'Pune (Remote)',
+      matchScore: 95,
+      salary: '₹9,00,000 - ₹16,00,000',
+      matchedSkills: ['React', 'TypeScript', 'CSS', 'Vitest'],
+      reasoning:
+        'Exemplary score in responsive UI architecture, accessible design tokens, and modern React component performance.',
+    },
+    backend: {
+      title: 'Software Engineer - Platform',
+      company: 'CloudBridge',
+      location: 'Bangalore (Hybrid)',
+      matchScore: 92,
+      salary: '₹12,00,000 - ₹22,00,000',
+      matchedSkills: ['Node.js', 'Docker', 'AWS', 'CI/CD'],
+      reasoning:
+        'Solid background in distributed API microservices, containerization, and relational database indexing.',
+    },
+  };
+
   const { data, isLoading } = useQuery({
     queryKey: ['jobs', 'latest'],
     queryFn: () => api.get<Paginated<Job>>('/jobs?limit=8&sort=newest'),
@@ -65,19 +103,35 @@ export function Home() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
           {/* Headline & Search */}
           <div className="lg:col-span-6 space-y-6">
-            <div className="inline-flex items-center gap-2 rounded border border-warm-border bg-warm-subtle px-3 py-1 text-xs font-semibold uppercase tracking-wider text-ink-700">
+            <div className="inline-flex items-center gap-2 rounded-full border border-warm-border bg-warm-subtle px-3 py-1 text-xs font-semibold uppercase tracking-wider text-ink-700">
               <span className="h-2 w-2 rounded-full bg-emerald-600 animate-pulse" />
-              Greenhouse-Inspired Structured Hiring
+              Dual AI Hiring Intelligence
             </div>
 
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-ink leading-[1.15]">
-              Hire for potential. Measure with structured clarity.
-            </h1>
+            <div className="space-y-3">
+              <h1 className="text-2xl sm:text-3xl lg:text-[2.5rem] font-extrabold tracking-tight text-ink leading-[1.2]">
+                AI Job Recommendations.
+                <span className="block text-brand-900 mt-1">
+                  Precision Screening for Recruiters.
+                </span>
+              </h1>
 
-            <p className="text-base text-ink-muted leading-relaxed max-w-xl">
-              HireHive delivers structured interview kits, objective scorecards, blind screening,
-              and dense semantic search so modern teams make fair, evidence-based hiring decisions.
-            </p>
+              <p className="text-sm sm:text-base text-ink-muted leading-relaxed max-w-xl">
+                Smart vector matching connects candidates with their ideal career moves, while automated resume parsing and 0-100 fit scores help recruiters identify top talent with zero bias.
+              </p>
+            </div>
+
+            {/* AI Dual Intelligence Feature Pills */}
+            <div className="flex flex-wrap items-center gap-2.5">
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-blue-200 bg-blue-50/80 px-3 py-1 text-xs font-semibold text-blue-900 shadow-xs">
+                <span className="text-blue-600 font-bold">✦</span>
+                <span>AI Job Recommender for Candidates</span>
+              </span>
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-200 bg-emerald-50/80 px-3 py-1 text-xs font-semibold text-emerald-900 shadow-xs">
+                <span className="text-emerald-600 font-bold">🎯</span>
+                <span>AI Candidate Screening for Recruiters</span>
+              </span>
+            </div>
 
             {/* Quick Search */}
             <form onSubmit={handleSearch} className="flex flex-col sm:flex-row gap-2 max-w-md pt-1">
@@ -88,7 +142,7 @@ export function Home() {
                 onChange={(e) => setQuery(e.target.value)}
                 aria-label="Search jobs"
               />
-              <button type="submit" className="btn-primary px-5 text-xs sm:text-sm">
+              <button type="submit" className="btn-primary px-5 text-xs sm:text-sm shrink-0">
                 Search Roles
               </button>
             </form>
@@ -263,6 +317,374 @@ export function Home() {
 
       {/* Associated Companies Infinite Logo Slider */}
       <CompanySlider />
+
+      {/* AI Intelligence Showcase Section */}
+      <section className="mx-auto max-w-6xl px-4 sm:px-6">
+        <div className="card border-warm-border bg-gradient-to-br from-white via-warm-subtle/40 to-white p-6 sm:p-10 shadow-sm space-y-8">
+          {/* Section Header */}
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-6 border-b border-warm-border">
+            <div className="space-y-2 max-w-2xl">
+              <div className="inline-flex items-center gap-2 rounded-full border border-brand-900/20 bg-brand-900/5 px-3 py-1 text-xs font-bold uppercase tracking-wider text-brand-900">
+                <span className="flex h-2 w-2 rounded-full bg-brand-900 animate-ping" />
+                Dual AI Intelligence
+              </div>
+              <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-ink">
+                AI Job Recommender & AI Candidate Screening
+              </h2>
+              <p className="text-sm text-ink-muted leading-relaxed">
+                Experience dual-sided artificial intelligence: candidates discover personalized career matches with vector semantic recommendations, while recruiters screen, rank, and evaluate applicants in seconds.
+              </p>
+            </div>
+
+            {/* Perspective Switcher Tabs */}
+            <div className="inline-flex rounded-lg border border-warm-border bg-warm-subtle p-1 self-start md:self-auto shrink-0 shadow-xs">
+              <button
+                type="button"
+                onClick={() => setAiShowcaseTab('candidate')}
+                className={`flex items-center gap-2 px-3.5 py-2 text-xs font-bold rounded-md transition-all ${
+                  aiShowcaseTab === 'candidate'
+                    ? 'bg-brand-900 text-white shadow-sm'
+                    : 'text-ink-muted hover:text-ink hover:bg-white/60'
+                }`}
+              >
+                <span>✦</span>
+                <span>For Candidates: AI Recommender</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setAiShowcaseTab('recruiter')}
+                className={`flex items-center gap-2 px-3.5 py-2 text-xs font-bold rounded-md transition-all ${
+                  aiShowcaseTab === 'recruiter'
+                    ? 'bg-brand-900 text-white shadow-sm'
+                    : 'text-ink-muted hover:text-ink hover:bg-white/60'
+                }`}
+              >
+                <span>🎯</span>
+                <span>For Recruiters: AI Screening</span>
+              </button>
+            </div>
+          </div>
+
+          {/* Tab 1: Candidate AI Job Recommender View */}
+          {aiShowcaseTab === 'candidate' && (
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center animate-fade-in">
+              <div className="lg:col-span-6 space-y-5">
+                <div className="space-y-2">
+                  <span className="text-xs font-bold uppercase tracking-wider text-blue-700">
+                    Candidate Advantage
+                  </span>
+                  <h3 className="text-xl sm:text-2xl font-bold text-ink">
+                    Stop applying blindly. Let AI match your true superpowers.
+                  </h3>
+                  <p className="text-xs sm:text-sm text-ink-muted leading-relaxed">
+                    Our AI parses your background, verified certificates, and GitHub projects into high-dimensional semantic embeddings. It continuously scans live job openings to find where you will excel the most.
+                  </p>
+                </div>
+
+                <div className="space-y-3 pt-1">
+                  <div className="flex items-start gap-3">
+                    <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-blue-100 text-blue-800 text-xs font-bold">
+                      1
+                    </span>
+                    <div>
+                      <h4 className="text-xs font-bold text-ink">Vector Semantic Alignment</h4>
+                      <p className="text-xs text-ink-muted mt-0.5">
+                        Matches your real skills and experience beyond just simple keyword matching, surfacing opportunities that genuinely fit your career path.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-3">
+                    <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-blue-100 text-blue-800 text-xs font-bold">
+                      2
+                    </span>
+                    <div>
+                      <h4 className="text-xs font-bold text-ink">AI Career Advisor (Gemini 3.8 Flash)</h4>
+                      <p className="text-xs text-ink-muted mt-0.5">
+                        Get real-time feedback on salary benchmarks, missing competencies to upskill, and personalized interview prep insights.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-3">
+                    <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-blue-100 text-blue-800 text-xs font-bold">
+                      3
+                    </span>
+                    <div>
+                      <h4 className="text-xs font-bold text-ink">Verified Profile Visibility Boost</h4>
+                      <p className="text-xs text-ink-muted mt-0.5">
+                        Verified candidate documents grant a trusted badge that places your application at the top of recruiter shortlists.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Quick Try Sample Filter */}
+                <div className="pt-2">
+                  <p className="text-[11px] font-semibold text-ink-muted uppercase tracking-wider mb-2">
+                    Simulate Candidate Search Profile:
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    {[
+                      { key: 'fullstack', label: 'MERN Full Stack (Abhinav)' },
+                      { key: 'frontend', label: 'React / Frontend (Sneha)' },
+                      { key: 'backend', label: 'DevOps / Platform (Karthik)' },
+                    ].map((item) => (
+                      <button
+                        key={item.key}
+                        type="button"
+                        onClick={() => setSampleJobQuery(item.key as any)}
+                        className={`px-3 py-1 rounded text-xs font-medium border transition-all ${
+                          sampleJobQuery === item.key
+                            ? 'bg-blue-900 text-white border-blue-900 font-semibold shadow-xs'
+                            : 'bg-white text-ink-muted border-warm-border hover:bg-warm-highlight'
+                        }`}
+                      >
+                        {item.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="pt-2">
+                  <Link to="/jobs" className="btn-primary text-xs">
+                    Browse AI Recommended Openings →
+                  </Link>
+                </div>
+              </div>
+
+              {/* Interactive Simulator: Recommended Job Card */}
+              <div className="lg:col-span-6">
+                <div className="rounded-xl border border-blue-200/80 bg-white p-5 shadow-sm space-y-4 relative overflow-hidden">
+                  <div className="absolute top-0 right-0 h-16 w-16 bg-blue-500/10 rounded-bl-full pointer-events-none" />
+
+                  <div className="flex items-center justify-between pb-3 border-b border-warm-border">
+                    <div className="flex items-center gap-2">
+                      <span className="h-2 w-2 rounded-full bg-emerald-500 animate-ping" />
+                      <span className="text-xs font-bold uppercase tracking-wider text-ink-700">
+                        AI Recommended Role
+                      </span>
+                    </div>
+                    <span className="inline-flex items-center gap-1 rounded-full bg-emerald-100 text-emerald-800 px-2.5 py-0.5 text-xs font-bold border border-emerald-300">
+                      ★ {sampleRecommendedJobs[sampleJobQuery].matchScore}% Match Score
+                    </span>
+                  </div>
+
+                  <div>
+                    <h4 className="text-base font-bold text-ink">
+                      {sampleRecommendedJobs[sampleJobQuery].title}
+                    </h4>
+                    <p className="text-xs text-ink-muted mt-0.5">
+                      {sampleRecommendedJobs[sampleJobQuery].company} · {sampleRecommendedJobs[sampleJobQuery].location}
+                    </p>
+                    <p className="text-xs font-semibold text-brand-900 mt-1">
+                      {sampleRecommendedJobs[sampleJobQuery].salary}
+                    </p>
+                  </div>
+
+                  {/* Skills Alignment */}
+                  <div className="space-y-1.5 pt-1">
+                    <p className="text-[11px] font-semibold text-ink-muted uppercase">
+                      Skill Compatibility:
+                    </p>
+                    <div className="flex flex-wrap gap-1.5">
+                      {sampleRecommendedJobs[sampleJobQuery].matchedSkills.map((sk) => (
+                        <span
+                          key={sk}
+                          className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-emerald-50 text-emerald-800 border border-emerald-200 text-xs font-medium"
+                        >
+                          <span className="text-[10px]">✓</span> {sk}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* AI Reasoning Box */}
+                  <div className="rounded-lg border border-blue-100 bg-blue-50/50 p-3 space-y-1">
+                    <div className="flex items-center gap-1.5 text-xs font-bold text-blue-900">
+                      <span>✦</span>
+                      <span>AI Match Analysis</span>
+                    </div>
+                    <p className="text-[11px] text-blue-950/80 leading-relaxed">
+                      "{sampleRecommendedJobs[sampleJobQuery].reasoning}"
+                    </p>
+                  </div>
+
+                  <div className="pt-2 flex items-center justify-between border-t border-warm-border">
+                    <span className="text-[11px] text-ink-muted">
+                      Semantic Cosine Similarity: 0.94
+                    </span>
+                    <Link
+                      to="/jobs"
+                      className="text-xs font-bold text-brand-900 hover:underline flex items-center gap-1"
+                    >
+                      View Role & Apply →
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Tab 2: Recruiter AI Candidate Screening View */}
+          {aiShowcaseTab === 'recruiter' && (
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center animate-fade-in">
+              <div className="lg:col-span-6 space-y-5">
+                <div className="space-y-2">
+                  <span className="text-xs font-bold uppercase tracking-wider text-emerald-700">
+                    Recruiter Superpower
+                  </span>
+                  <h3 className="text-xl sm:text-2xl font-bold text-ink">
+                    Find the perfect candidate in minutes, not weeks.
+                  </h3>
+                  <p className="text-xs sm:text-sm text-ink-muted leading-relaxed">
+                    Say goodbye to manually reviewing hundreds of PDF resumes. Our AI screening engine automatically extracts skills, calculates composite qualification scores, and flags gaps with complete objectivity.
+                  </p>
+                </div>
+
+                <div className="space-y-3 pt-1">
+                  <div className="flex items-start gap-3">
+                    <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-emerald-800 text-xs font-bold">
+                      1
+                    </span>
+                    <div>
+                      <h4 className="text-xs font-bold text-ink">Instant Automated Resume Parsing</h4>
+                      <p className="text-xs text-ink-muted mt-0.5">
+                        Deep text extraction maps candidate education, years of experience, and demonstrable skill sets directly to your job scorecard.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-3">
+                    <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-emerald-800 text-xs font-bold">
+                      2
+                    </span>
+                    <div>
+                      <h4 className="text-xs font-bold text-ink">Composite Fit Score & Gap Breakdown</h4>
+                      <p className="text-xs text-ink-muted mt-0.5">
+                        Receive a calibrated 0-100 score highlighting core skill matches, missing prerequisites, and relevant career milestones.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-3">
+                    <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-emerald-800 text-xs font-bold">
+                      3
+                    </span>
+                    <div>
+                      <h4 className="text-xs font-bold text-ink">Bias-Free Blind Triage Mode</h4>
+                      <p className="text-xs text-ink-muted mt-0.5">
+                        Instantly redact candidate names and demographics with a single toggle, ensuring every applicant is evaluated purely on merit.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="pt-2 flex items-center gap-3">
+                  <Link to="/register" className="btn-primary text-xs">
+                    Post a Role & Screen with AI →
+                  </Link>
+                  <Link to="/jobs" className="btn-secondary text-xs">
+                    Explore Candidate Pipeline
+                  </Link>
+                </div>
+              </div>
+
+              {/* Interactive Simulator: Screened Candidate Card */}
+              <div className="lg:col-span-6">
+                <div className="rounded-xl border border-emerald-200/80 bg-white p-5 shadow-sm space-y-4 relative overflow-hidden">
+                  <div className="absolute top-0 right-0 h-16 w-16 bg-emerald-500/10 rounded-bl-full pointer-events-none" />
+
+                  <div className="flex items-center justify-between pb-3 border-b border-warm-border">
+                    <div className="flex items-center gap-2">
+                      <span className="flex h-5 w-5 items-center justify-center rounded bg-emerald-700 text-white text-[10px] font-bold">
+                        AI
+                      </span>
+                      <span className="text-xs font-bold uppercase tracking-wider text-ink-700">
+                        Candidate Screening Result
+                      </span>
+                    </div>
+
+                    {/* Blind Review Toggle */}
+                    <button
+                      type="button"
+                      onClick={() => setScreeningBlindMode(!screeningBlindMode)}
+                      className={`text-[11px] px-2.5 py-1 rounded font-semibold border transition-all ${
+                        screeningBlindMode
+                          ? 'bg-brand-900 text-white border-brand-900 shadow-xs'
+                          : 'bg-warm-subtle text-ink-muted border-warm-border hover:bg-warm-highlight'
+                      }`}
+                    >
+                      {screeningBlindMode ? 'Blind Mode: Active (Redacted)' : 'Blind Mode: Off'}
+                    </button>
+                  </div>
+
+                  {/* Candidate Header */}
+                  <div className="flex items-start justify-between gap-3">
+                    <div>
+                      <h4 className="text-base font-bold text-ink">
+                        {screeningBlindMode ? 'Candidate #8042 (Redacted)' : 'Abhinav Tarigoppula'}
+                      </h4>
+                      <p className="text-xs text-ink-muted mt-0.5">
+                        {screeningBlindMode
+                          ? 'Full Stack Engineer · 3 Years Experience · Verified Credentials'
+                          : 'Senior Full Stack Developer · Visakhapatnam, India · Verified'}
+                      </p>
+                    </div>
+                    <span className="inline-flex items-center rounded-full bg-emerald-100 text-emerald-800 px-3 py-1 text-xs font-bold border border-emerald-300">
+                      98/100 Fit Score
+                    </span>
+                  </div>
+
+                  {/* Multi-factor Score Breakdown */}
+                  <div className="space-y-2 pt-1 text-xs">
+                    <div>
+                      <div className="flex justify-between text-ink-muted mb-1 text-[11px]">
+                        <span className="font-semibold text-ink">Core Skill Overlap (React, Node, Mongo, TS):</span>
+                        <span className="font-bold text-emerald-800">100% Match</span>
+                      </div>
+                      <div className="h-1.5 w-full bg-warm-border rounded-full overflow-hidden">
+                        <div className="h-full bg-emerald-600 rounded-full" style={{ width: '100%' }} />
+                      </div>
+                    </div>
+
+                    <div>
+                      <div className="flex justify-between text-ink-muted mb-1 text-[11px]">
+                        <span className="font-semibold text-ink">Experience Threshold (Req: 1 yr / Cand: 3 yrs):</span>
+                        <span className="font-bold text-emerald-800">Exceeds Requirement</span>
+                      </div>
+                      <div className="h-1.5 w-full bg-warm-border rounded-full overflow-hidden">
+                        <div className="h-full bg-emerald-600 rounded-full" style={{ width: '95%' }} />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* AI Screening Takeaway */}
+                  <div className="rounded-lg border border-emerald-100 bg-emerald-50/50 p-3 space-y-1">
+                    <div className="flex items-center gap-1.5 text-xs font-bold text-emerald-900">
+                      <span>✓</span>
+                      <span>AI Screening Assessment (Strong Match)</span>
+                    </div>
+                    <p className="text-[11px] text-emerald-950/80 leading-relaxed">
+                      "Candidate demonstrates production-level proficiency across React, Node.js, and MongoDB. Passed identity and academic document verification. Recommended for technical phone screen."
+                    </p>
+                  </div>
+
+                  {/* Suggested Interview Question */}
+                  <div className="rounded-lg border border-warm-border bg-warm-subtle/60 p-2.5 text-xs space-y-1">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-ink-muted">
+                      Suggested Interview Question:
+                    </span>
+                    <p className="text-[11px] text-ink leading-relaxed">
+                      "Can you describe your experience implementing role-based authentication and rate limiting in high-throughput Express APIs?"
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      </section>
 
       {/* Greenhouse Structured Hiring Pillars */}
       <section className="mx-auto max-w-6xl px-4 sm:px-6 pt-4">
